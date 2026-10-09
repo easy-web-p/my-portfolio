@@ -3,8 +3,10 @@
 import React from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
+import { displayNameOf, useDashboardUser } from '@/components/dashboard/session-context';
 
 export default function OrderDetailPage() {
+  const user = useDashboardUser();
   const params = useParams();
   const orderId = (params?.id as string) || 'ord-101';
 
@@ -70,9 +72,8 @@ export default function OrderDetailPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 rounded-2xl bg-surface-container-low dark:bg-surface-container-highest/20 border border-outline-variant/15 mb-6 text-xs">
             <div>
               <span className="font-bold text-on-surface-variant uppercase tracking-wider block mb-1">Billed To</span>
-              <p className="font-bold text-on-surface text-sm">Alex Mercer</p>
-              <p className="text-on-surface-variant">alex.mercer@example.com</p>
-              <p className="text-on-surface-variant">Bangkok, Thailand</p>
+              <p className="font-bold text-on-surface text-sm">{displayNameOf(user)}</p>
+              <p className="text-on-surface-variant">{user.email ?? '—'}</p>
             </div>
             <div>
               <span className="font-bold text-on-surface-variant uppercase tracking-wider block mb-1">Payment Details</span>

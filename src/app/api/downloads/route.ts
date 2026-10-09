@@ -58,14 +58,23 @@ export async function GET(request: Request) {
       );
     }
 
-    // Keep the object private: the server proxies the package only after the
-    // entitlement check instead of exposing a long-lived public URL.
-    const [packageContents] = await file.download();
-
+    // หักโควตา "ก่อน" ดึงไฟล์ — ลำดับนี้สำคัญ
+    //
+    // ของเดิมดึงไฟล์ทั้งก้อนมาก่อนแล้วค่อยเช็กสิทธิ์ ทำให้ลิงก์ที่โควตาหมด
+    // หรือหมดอายุแล้วยังสั่งให้ server ดาวน์โหลดไฟล์หลายสิบ MB จาก Storage
+    // ซ้ำได้ไม่จำกัดก่อนจะได้ 403 กลับไป — เป็นช่องขยายภาระ (และค่า egress)
+    //
+    // เช็ก exists() ไว้ก่อนหน้านี้แล้ว จึงไม่เผาโควตาทิ้งเพราะไฟล์หาย
+    // ถ้าการส่งไฟล์ล้มหลังหักโควตา ผู้ใช้เสียสิทธิ์ไป 1 ครั้ง ซึ่งยอมรับได้
+    // มากกว่าการเปิดให้ยิงซ้ำได้ฟรี (Fail-Closed)
     const entitlement = await consumeDownloadEntitlement(order.reference, query.data.token);
     if (!entitlement.valid) {
       return NextResponse.json({ error: entitlement.reason }, { status: 403 });
     }
+
+    // Keep the object private: the server proxies the package only after the
+    // entitlement check instead of exposing a long-lived public URL.
+    const [packageContents] = await file.download();
 
     const fileName = `${download.productSlug}-v${download.version}.zip`;
     const responseBody = new Uint8Array(packageContents).buffer;

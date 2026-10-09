@@ -2,10 +2,15 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { displayNameOf, useDashboardUser } from '@/components/dashboard/session-context';
+import { SignOutButton } from '@/components/auth/sign-out-button';
 
 export default function CustomerSettingsPage() {
-  const [name, setName] = useState('Alex Mercer');
-  const [email, setEmail] = useState('alex.mercer@example.com');
+  // ค่าเริ่มต้นของฟอร์มมาจาก session จริง
+  // หมายเหตุ: ปุ่ม Save ยังไม่ได้ต่อ backend — ยังไม่เขียนค่ากลับไปที่ Firebase Auth
+  const user = useDashboardUser();
+  const [name, setName] = useState(displayNameOf(user));
+  const [email, setEmail] = useState(user.email ?? '');
   const [newsletterSubscribed, setNewsletterSubscribed] = useState(true);
   const [productUpdatesSubscribed, setProductUpdatesSubscribed] = useState(true);
   const [savedSuccess, setSavedSuccess] = useState(false);
@@ -163,6 +168,7 @@ export default function CustomerSettingsPage() {
               >
                 Request Account Deletion
               </button>
+              <SignOutButton className="px-3.5 py-2 rounded-xl bg-surface-container hover:bg-surface-container-high text-xs font-bold text-on-surface transition-colors cursor-pointer disabled:opacity-50" />
             </div>
           </div>
         </div>

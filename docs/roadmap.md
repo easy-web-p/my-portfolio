@@ -29,10 +29,12 @@
 - [x] ตั้ง custom claim `role` + verify ฝั่ง server — `scripts/set-admin-claim.mjs` และ `POST /api/auth/session` ที่ `verifyIdToken(checkRevoked)` + บังคับว่าต้องเพิ่งล็อกอินภายใน 5 นาที
 - [x] **ปิดทางเลี่ยงที่หน้า login** — ของเดิมมี dropdown เลือก role เองและปุ่ม "Quick Prototype Sign-in" ที่ `router.push('/admin')` โดยไม่ต้องกรอกอะไรเลย ตัดออกทั้งคู่ เปลี่ยนเป็น `signInWithEmailAndPassword` แล้วแลกเป็น session cookie
 - [ ] deploy `firestore.rules` ขึ้น project จริง (`firebase deploy --only firestore:rules`) — ยังไม่ขึ้น แต่ตรวจแล้วว่า default rules ของ DB ปิดอยู่ (REST probe โดยไม่ล็อกอิน คืน 403 PERMISSION_DENIED)
-- [ ] ลบตัวตน hardcode ที่กระจายอยู่ (`alex.mercer@example.com` ใน `src/app/dashboard/page.tsx:9`, `settings/page.tsx:8`, `orders/[id]/page.tsx:74`) — guard ปิดการเข้าถึงได้แล้ว แต่ข้อมูลที่โชว์ยังเป็น mock ไม่ใช่ของผู้ใช้ที่ล็อกอินจริง
+- [x] ลบตัวตน hardcode — ทั้ง 3 ไฟล์อ่านจาก session จริงผ่าน `src/components/dashboard/session-context.tsx` ที่ server layout ป้อนค่าลงมา · ลบที่อยู่ปลอมในใบเสร็จออกด้วย
+- [x] **`/register` สร้างบัญชีจริง** — ของเดิมเป็น `setTimeout` แล้ว push ซึ่งกลายเป็นทางตันเมื่อมี guard
+- [x] **มีปุ่มออกจากระบบ** — `src/components/auth/sign-out-button.tsx` ใน `/dashboard/settings` และ admin topbar
 - [x] guard หน้า `/dashboard/*` — `src/app/dashboard/layout.tsx` เรียก `requireUser()` · ทดสอบจริง **307 → /login?next=/dashboard** (ส่วน "เห็นได้แต่ข้อมูลของตัวเอง" รออยู่ในข้อ hardcode ด้านบน)
-- [ ] route handler ที่เหลือใน `src/app/api/` เช็คสิทธิ์ฝั่ง server เอง (`checkout`, `downloads`, `contact` ยังไม่เช็ค · `auth/session` เช็คแล้ว + validate ด้วย zod)
-- [ ] `src/app/api/webhooks/route.ts` ตรวจลายเซ็น webhook ไม่ใช่เชื่อ payload
+- [x] route handler — ตรวจของจริงแล้ว: `checkout` คำนวณราคาฝั่ง server ไม่เชื่อ client และ validate ด้วย zod ครบ · `downloads` มี token + โควตา + วันหมดอายุ (สลับลำดับให้หักโควตาก่อนดึงไฟล์แล้ว) · `webhooks` ตรวจลายเซ็น Stripe อยู่แล้ว — **สองข้อหลังเคยบันทึกผิดว่ายังไม่มี ดู audit_log รอบ 2**
+- [ ] **ต้องยืนยันก่อนเปิดขาย:** cookie ต่อออเดอร์ชื่อ `phisit_checkout_<ref>` อาจถูก CDN ตัดทิ้ง (เฉพาะชื่อ `__session` ที่รอด) ต้องทดลองซื้อจริง 1 รายการบน App Hosting
 - [ ] auditor ผ่าน 0 critical/high ก่อนปิด Phase
 
 **ต้องทำก่อนใช้หลังบ้านได้จริง:** สร้าง service account key แล้วตั้ง `GOOGLE_APPLICATION_CREDENTIALS` (ดู `.env.example`) → สมัครบัญชีที่ `/register` → รัน `node scripts/set-admin-claim.mjs <email>` → ออกจากระบบแล้วเข้าใหม่

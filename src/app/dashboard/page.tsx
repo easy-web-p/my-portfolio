@@ -3,10 +3,14 @@
 import React from 'react';
 import Link from 'next/link';
 import { STORE_PRODUCTS } from '@/lib/store';
+import { displayNameOf, useDashboardUser } from '@/components/dashboard/session-context';
 
 export default function CustomerDashboardPage() {
-  const customerName = 'Alex Mercer';
-  const customerEmail = 'alex.mercer@example.com';
+  // ตัวตนมาจาก session ที่ server verify แล้ว (ส่งลงมาทาง DashboardUserProvider)
+  // ไม่ใช่ค่าตัวอย่างที่ hardcode ไว้เหมือนก่อน
+  const user = useDashboardUser();
+  const customerName = displayNameOf(user);
+  const customerEmail = user.email ?? '—';
 
   const mockPurchasedItems = [
     {
@@ -57,7 +61,7 @@ export default function CustomerDashboardPage() {
                 </span>
               </div>
               <p className="text-xs sm:text-sm text-on-surface-variant mt-0.5 font-mono">
-                {customerEmail} • Account ID: <span className="text-primary">cst_78201</span>
+                {customerEmail} • Account ID: <span className="text-primary font-mono">{user.uid.slice(0, 12)}</span>
               </p>
             </div>
           </div>

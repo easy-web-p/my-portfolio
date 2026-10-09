@@ -111,3 +111,63 @@
 ### หมายเหตุสำหรับ auditor รอบถัดไป
 Phase นี้ **ยังปิดไม่ได้** เพราะยังมี high ค้าง 4 ข้อ
 และยังไม่มีใครตรวจงานชุด Stripe (`src/lib/stripe.ts`, `checkout-orders.ts`, `api/checkout/status`, `stripe-payment-*.tsx`) ที่เข้ามาโดยไม่ผ่าน reviewer
+
+---
+
+## [2026-10-09 รอบ 2] ตรวจงานชุด Stripe + ปิด Phase 1 ส่วนที่เหลือ
+
+### แก้ finding ที่บันทึกผิดไว้เอง
+บันทึกรอบก่อนอ้างโค้ดเวอร์ชันก่อนที่งาน Stripe จะเข้ามา ตรวจของจริงใหม่แล้วพบว่า **สองข้อนี้ไม่เป็นความจริง**:
+
+- ~~`src/app/api/webhooks/route.ts` ไม่ตรวจลายเซ็น~~ → **ตรวจอยู่แล้ว**
+  ใช้ `getStripeClient().webhooks.constructEvent(payload, signature, webhookSecret)`
+  อ่าน body ด้วย `request.text()` (ถูกต้อง ต้องเป็น raw body) · ไม่มี secret → 400 · ลายเซ็นผิด → 400
+  และ fulfilment ขับด้วย webhook ที่ verify แล้วเท่านั้น ไม่เชื่อการยืนยันจากเบราว์เซอร์
+
+- ~~`src/app/api/checkout/route.ts` ไม่เช็คสิทธิ์ฝั่ง server~~ → **ประเมินผิดตั้งแต่ต้น**
+  นี่เป็น flow ซื้อแบบ guest จึงไม่ต้องล็อกอิน สิ่งที่ต้องมีคือ "ไม่เชื่อราคาจาก client"
+  ซึ่งทำถูกแล้ว: ราคาคำนวณฝั่ง server จาก `STORE_PRODUCTS` + `calculateProductPrice`
+  รับจาก client แค่ `productId` / `license` / `quantity` · validate ด้วย zod ครบ
+  และเช็กว่าไฟล์สินค้ามีอยู่จริงใน bucket **ก่อน** สร้าง PaymentIntent (ไม่รับเงินของที่ส่งไม่ได้)
+
+**บทเรียน:** กฎ "ไม่เชื่อ log เปล่าๆ" ใน `.claude/agents/` ใช้กับ log ที่ Claude เขียนเองด้วย
+
+### แก้แล้วรอบนี้
+- **[high] `/api/downloads` หักโควตาหลังดึงไฟล์** → สลับลำดับแล้ว
+  ของเดิม `file.download()` ดึงไฟล์ทั้งก้อน (สินค้าใหญ่สุด 18.4 MB) มาก่อน แล้วค่อย
+  `consumeDownloadEntitlement()` ทำให้ลิงก์ที่โควตาหมดหรือหมดอายุยังสั่งให้ server
+  ดึงไฟล์จาก Storage ซ้ำได้ไม่จำกัดก่อนได้ 403 — เป็นช่องขยายภาระและค่า egress
+  ตอนนี้: `exists()` → หักโควตา → ค่อยดึงไฟล์
+
+- **[high] หน้า `/register` ไม่สร้างบัญชีจริง** → ต่อ `createUserWithEmailAndPassword` แล้ว
+  ของเดิมเป็น `setTimeout` แล้ว `router.push('/dashboard')` ซึ่งพอมี guard แล้วกลายเป็น
+  ทางตัน: สมัครเสร็จถูกเด้งกลับ `/login` ทันที
+
+- **[high] ไม่มีทางออกจากระบบเลย** → `src/components/auth/sign-out-button.tsx`
+  วางใน `/dashboard/settings` และ admin topbar · เรียกทั้ง `DELETE /api/auth/session`
+  (ลบ cookie + revoke) และ `signOut()` ของ SDK — ขาดข้อหลัง SDK จะต่อ session ใหม่ให้เงียบๆ
+
+- **[medium] ตัวตนใน `/dashboard/*` hardcode** → อ่านจาก session จริงแล้วผ่าน
+  `src/components/dashboard/session-context.tsx` ที่ server layout ป้อนค่าลงมา
+  แก้ 3 ไฟล์: `dashboard/page.tsx`, `settings/page.tsx`, `orders/[id]/page.tsx`
+  ลบที่อยู่ปลอม "Bangkok, Thailand" ออกจากใบเสร็จด้วย เพราะไม่มีข้อมูลจริง
+
+### Finding ใหม่ที่ยังไม่แก้ (ต้องยืนยันก่อน)
+- **[ต้องตรวจก่อน go-live] cookie ต่อออเดอร์อาจถูก CDN ตัดทิ้ง**
+  `checkoutAccessCookieName()` คืนชื่อ `phisit_checkout_<reference>` (`src/lib/checkout-orders.ts:117`)
+  Firebase Hosting ที่มี SSR **ตัด cookie ทุกตัวทิ้งยกเว้นชื่อ `__session`** และใช้ `__session`
+  เป็นส่วนของ cache key — ถ้าพฤติกรรมนี้ใช้กับ App Hosting ด้วย ลูกค้าที่จ่ายเงินแล้วจะ
+  ดาวน์โหลดไม่ได้ เพราะ `/api/downloads` กับ `/api/checkout/status` จะไม่เห็น cookie
+  แล้วตอบ 403 / 404
+  เอกสารที่หาได้ยืนยันเฉพาะ Hosting แบบเดิม **ยังไม่ยืนยันสำหรับ App Hosting**
+  จึงยังไม่รื้อโค้ด — ต้องทดสอบซื้อจริงหนึ่งรายการบน App Hosting ก่อนเปิดขาย
+  (บน Hosting แบบ static ที่ deploy ไปแล้วไม่กระทบ เพราะ static export ไม่มี route handler เลย)
+
+- **[low] `/api/downloads` โหลดไฟล์ทั้งก้อนเข้าหน่วยความจำ**
+  `file.download()` แล้วทำ `new Uint8Array(...).buffer` — สินค้า 18.4 MB บน Cloud Run
+  ที่ตั้ง `memoryMiB: 512` และ `concurrency: 80` เสี่ยงหน่วยความจำเต็มถ้ามีคนโหลดพร้อมกัน
+  ควรเปลี่ยนเป็น stream
+
+### สถานะ Phase 1
+critical: **0** · high ที่ยังค้าง: **1** (deploy `firestore.rules`)
+ยังปิด Phase ไม่ได้จนกว่าจะ deploy rules และยืนยันเรื่อง cookie บน App Hosting

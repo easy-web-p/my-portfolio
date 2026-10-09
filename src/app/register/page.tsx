@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { getFirebaseAuth } from '@/lib/firebase';
 
 export default function RegisterPage() {
   const [name, setName] = useState('');
@@ -10,17 +11,74 @@ export default function RegisterPage() {
   const [password, setPassword] = useState('');
   const [agreed, setAgreed] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+  const [message, setMessage] = useState('');
   const router = useRouter();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  /**
+   * สมัครสมาชิกจริงด้วย Firebase Auth
+   *
+   * ของเดิมเป็น setTimeout แล้ว router.push('/dashboard') เฉยๆ ไม่ได้สร้างบัญชี
+   * ซึ่งพอมี guard ที่ /dashboard แล้วจะกลายเป็นทางตัน: สมัครเสร็จก็ถูกเด้ง
+   * กลับไป /login ทันทีเพราะไม่มี session
+   *
+   * ขั้นตอน: createUserWithEmailAndPassword -> ตั้ง displayName ->
+   * แลก ID token เป็น session cookie ที่ /api/auth/session -> เข้า /dashboard
+   * ผู้ใช้ใหม่ได้ role CUSTOMER โดยปริยาย (ไม่มี claim role) การเป็น ADMIN
+   * ต้องให้สิทธิ์จากฝั่ง server ด้วย scripts/set-admin-claim.mjs เท่านั้น
+   */
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!agreed) return;
 
     setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
+    setMessage('');
+
+    try {
+      const { createUserWithEmailAndPassword, updateProfile } = await import('firebase/auth');
+      const auth = await getFirebaseAuth();
+      const credential = await createUserWithEmailAndPassword(auth, email, password);
+
+      const trimmedName = name.trim();
+      if (trimmedName) {
+        await updateProfile(credential.user, { displayName: trimmedName });
+      }
+
+      // ขอ token ใหม่หลังตั้ง displayName เพื่อให้ claim ที่ติดมาเป็นค่าล่าสุด
+      const idToken = await credential.user.getIdToken(true);
+
+      const res = await fetch('/api/auth/session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ idToken }),
+      });
+
+      if (!res.ok) {
+        // บัญชีถูกสร้างแล้วแต่ตั้ง session ไม่สำเร็จ — ส่งไปล็อกอินเอง
+        setMessage('Account created, but we could not sign you in. Please use the sign-in page.');
+        setIsLoading(false);
+        return;
+      }
+
       router.push('/dashboard');
-    }, 600);
+    } catch (err: unknown) {
+      const code = (err as { code?: string })?.code ?? '';
+
+      if (code === 'auth/email-already-in-use') {
+        setMessage('That email already has an account. Try signing in instead.');
+      } else if (code === 'auth/weak-password') {
+        setMessage('Please choose a stronger password (at least 8 characters).');
+      } else if (code === 'auth/invalid-email') {
+        setMessage('That email address does not look valid.');
+      } else if (code === 'auth/network-request-failed') {
+        setMessage('Network error. Check your connection and try again.');
+      } else if (code === 'auth/operation-not-allowed') {
+        setMessage('Email sign-in is not enabled for this project yet.');
+      } else {
+        setMessage('Could not create your account. Please try again.');
+      }
+
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -107,6 +165,15 @@ export default function RegisterPage() {
                 </Link>.
               </span>
             </div>
+
+            {message && (
+              <p
+                role="alert"
+                className="text-xs font-semibold text-error bg-error-container/60 rounded-xl px-3 py-2"
+              >
+                {message}
+              </p>
+            )}
 
             <button
               type="submit"

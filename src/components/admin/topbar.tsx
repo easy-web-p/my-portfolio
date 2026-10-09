@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { FUN_STATUS_MESSAGES } from '@/lib/admin';
 import { useLanguage } from '@/context/language-context';
+import { SignOutButton } from '@/components/auth/sign-out-button';
 
 interface TopbarProps {
   onOpenCommandPalette: () => void;
@@ -191,6 +192,8 @@ export const AdminTopbar: React.FC<TopbarProps> = ({
             <div className="text-[10px] text-primary font-mono font-semibold">Admin Owner</div>
           </div>
         </div>
+
+        <SignOutButton className="px-3 py-1.5 rounded-lg bg-surface-container hover:bg-surface-container-high text-[11px] font-bold text-on-surface transition-colors cursor-pointer disabled:opacity-50 shrink-0" />
       </div>
     </header>
   );
