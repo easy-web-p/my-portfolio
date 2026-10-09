@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Space+Grotesk:wght@500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{width:100vw;margin:0;padding:0;}body{overscroll-behavior:none;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "surface-container-low": "#f4f3f1", "outline": "#7b7486", "on-primary-fixed": "#23005c", "on-tertiary-fixed": "#141b2b", "primary-container": "#8455ef", "surface-container": "#efeeeb", "surface-bright": "#faf9f6", "surface-container-highest": "#e3e2e0", "on-secondary": "#ffffff", "secondary": "#486800", "surface-variant": "#e3e2e0", "background": "#faf9f6", "surface-container-high": "#e9e8e5", "tertiary-container": "#6e7487", "on-error": "#ffffff", "primary-fixed-dim": "#d0bcff", "tertiary": "#555c6e", "primary": "#6b38d4", "secondary-fixed": "#baf54c", "error-container": "#ffdad6", "on-tertiary-container": "#fefcff", "inverse-surface": "#2f312f", "secondary-fixed-dim": "#9fd830", "primary-fixed": "#e9ddff", "on-secondary-container": "#4b6c00", "on-secondary-fixed-variant": "#354e00", "inverse-primary": "#d0bcff", "surface-container-lowest": "#ffffff", "outline-variant": "#cbc3d7", "on-primary-container": "#fffbff", "error": "#ba1a1a", "on-secondary-fixed": "#131f00", "surface": "#faf9f6", "on-tertiary-fixed-variant": "#404758", "on-surface-variant": "#494454", "on-primary-fixed-variant": "#5516be", "on-error-container": "#93000a", "on-primary": "#ffffff", "on-surface": "#1a1c1a", "tertiary-fixed": "#dce2f7", "inverse-on-surface": "#f2f1ee", "secondary-container": "#b7f249", "surface-tint": "#6d3bd7", "surface-dim": "#dbdad7", "on-tertiary": "#ffffff", "on-background": "#1a1c1a", "tertiary-fixed-dim": "#c0c6db" }, "borderRadius": { "DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px" }, "spacing": { "section-gap": "6rem", "card-padding-lg": "2.5rem", "card-padding-sm": "1.25rem", "grid-gutter-sm": "1rem", "grid-gutter-lg": "2rem", "grid-gutter-md": "1.5rem", "margin-desktop": "4rem", "card-padding-md": "1.75rem", "margin-mobile": "1.25rem", "margin-tablet": "2.5rem" }, "fontFamily": { "headline-sm": ["Space Grotesk"], "display-hero": ["Space Grotesk"], "body-md": ["Inter"], "headline-lg-mobile": ["Space Grotesk"], "label-code": ["Space Grotesk"], "label-badge": ["Space Grotesk"], "display-hero-mobile": ["Space Grotesk"], "body-lg": ["Inter"], "headline-lg": ["Space Grotesk"], "headline-md": ["Space Grotesk"], "body-sm": ["Inter"] }, "fontSize": { "headline-sm": ["1.25rem", { "lineHeight": "1.75rem", "letterSpacing": "0em", "fontWeight": "600" }], "display-hero": ["4rem", { "lineHeight": "4.5rem", "letterSpacing": "-0.04em", "fontWeight": "700" }], "body-md": ["1rem", { "lineHeight": "1.5rem", "letterSpacing": "0em", "fontWeight": "400" }], "headline-lg-mobile": ["1.75rem", { "lineHeight": "2.25rem", "letterSpacing": "-0.02em", "fontWeight": "600" }], "label-code": ["0.8125rem", { "lineHeight": "1.25rem", "letterSpacing": "0.02em", "fontWeight": "500" }], "label-badge": ["0.75rem", { "lineHeight": "1rem", "letterSpacing": "0.05em", "fontWeight": "700" }], "display-hero-mobile": ["2.5rem", { "lineHeight": "3rem", "letterSpacing": "-0.03em", "fontWeight": "700" }], "body-lg": ["1.125rem", { "lineHeight": "1.75rem", "letterSpacing": "-0.01em", "fontWeight": "400" }], "headline-lg": ["2.5rem", { "lineHeight": "3rem", "letterSpacing": "-0.02em", "fontWeight": "600" }], "headline-md": ["1.75rem", { "lineHeight": "2.25rem", "letterSpacing": "-0.01em", "fontWeight": "600" }], "body-sm": ["0.875rem", { "lineHeight": "1.25rem", "letterSpacing": "0.01em", "fontWeight": "400" }] } } } };</script></head><body class="bg-surface font-body-md text-body-md text-on-surface flex flex-col min-h-screen"><header class="fixed top-0 w-full z-50 pt-safe bg-surface/80 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-16 px-4 flex items-center justify-between gap-2 max-w-screen-md mx-auto"><div class="flex items-center gap-2.5 min-w-0"><img alt="Playful Intelligence Logo" class="h-8 w-auto object-contain shrink-0" src="https://lh3.googleusercontent.com/aida/AEtjO1U6sfavAN_ys8zO1XKfl2uY28F-2_CVDxsLNPObun24kCeIqc2T_pG9JRh9robsl86OaSMFSQQ8EJ3J6ROIHlGSnqLxJS4yWWuQvNtNBDa1bEN4DFPRKp2IHH7D0Gpzoo_n_Ii0S5kCVnjCKH9P51V70C0SpivwpLYOi3raEzaAvMFqf0Ds55Pbl8KzngZRGw5jLm367EcuTXVDgkpwQQcjNMunat3AGGCQVdDTp0N5jdpbdi9hziks"/><div class="flex flex-col min-w-0"><span class="font-headline-sm text-label-code text-on-surface uppercase tracking-wider truncate">MAYA // AI &amp; DESIGN</span><span class="font-label-badge text-label-badge text-primary truncate">Work</span></div></div><div class="flex items-center gap-1.5 shrink-0"><button aria-label="Toggle Theme" class="w-11 h-11 flex items-center justify-center rounded-full bg-surface-container-low text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined text-[20px]">light_mode</span></button><button aria-label="Get in Touch" class="h-11 px-3 rounded-full bg-secondary-container text-on-secondary-container font-label-badge text-label-badge flex items-center gap-1 hover:bg-secondary-fixed transition-colors"><span class="material-symbols-outlined text-[16px]">send</span><span class="hidden xs:inline">Collab</span></button><div class="w-11 h-11 flex items-center justify-center"><img alt="Profile" class="w-8 h-8 rounded-full object-cover ring-2 ring-primary-fixed" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDhy7xdp22mV7hruzz-HqMg8HSz-q3PculaSfE30PwBbZZm5MItD6X8s0Ii4g7VNniUb1odti_sHlG8-yBbws03nHGIW6ZOXGMMrjjmT2OmAlhckFU7wQxUUliKOLOGYfVQCSIr7OBa25g9OhMkVKAXiN-EZyPU_49bO4OpRITFGnXk_sW5JIvvyOpaGC002n21kMlqlApk0NulZOxG-mNsrV9MhthIYvXPCGEBinZ_3R4YugyqLNA"/></div></div></div></header><main class="flex-1 flex flex-col relative w-full pt-16 bg-surface"><div class="flex flex-col w-full">
+<!-- Hero Section -->
+<section class="px-4 pt-6 pb-10 flex flex-col gap-6 max-w-screen-md mx-auto w-full">
+<!-- Greeting Pills -->
+<div class="flex flex-wrap items-center gap-2">
+<div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-surface-container shadow-sm">
+<span class="text-base">👋</span>
+<span class="font-label-badge text-label-badge text-on-surface">Hi, I'm Maya Lin</span>
+</div>
+<div class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary-fixed text-on-primary-fixed shadow-sm">
+<span class="material-symbols-outlined text-[16px] text-primary">auto_awesome</span>
+<span class="font-label-badge text-label-badge uppercase tracking-wider">AI Technologist &amp; Product Designer</span>
+</div>
+</div>
+<!-- Editorial Hero Titles -->
+<div class="flex flex-col gap-3">
+<h1 class="font-display-hero-mobile text-display-hero-mobile text-on-surface tracking-tight leading-tight">
+        I design thoughtful digital experiences &amp; explore how <span class="inline-block text-primary underline decoration-secondary-container decoration-4 underline-offset-4">AI makes them smarter.</span>
+</h1>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-xl">
+        Turning complex latent model behaviors into human-friendly, deeply tactile, and delightful interfaces.
+      </p>
+</div>
+<!-- Action Buttons -->
+<div class="flex flex-wrap items-center gap-3">
+<a class="inline-flex items-center justify-center gap-2 px-6 h-12 rounded-full bg-on-surface text-surface-container-lowest font-headline-sm text-label-code shadow-md hover:bg-primary transition-all" href="#work">
+<span>Explore My Work</span>
+<span class="material-symbols-outlined text-[18px]">arrow_downward</span>
+</a>
+<a class="inline-flex items-center justify-center gap-2 px-6 h-12 rounded-full bg-secondary-container text-on-secondary-container font-headline-sm text-label-code shadow-sm hover:bg-secondary-fixed transition-all" href="#contact">
+<span class="material-symbols-outlined text-[18px]">chat</span>
+<span>Let's Talk</span>
+</a>
+</div>
+<!-- Interactive Digital Playground Widget -->
+<div class="mt-2 w-full rounded-lg bg-surface-container-lowest p-5 shadow-[0_16px_36px_-12px_rgba(107,56,212,0.12)] flex flex-col gap-4 relative overflow-hidden">
+<!-- Top Meta Bar -->
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="w-3 h-3 rounded-full bg-secondary animate-pulse"></span>
+<span class="font-label-code text-label-code text-tertiary uppercase tracking-widest">LIVE INTERFACE // TOY 01</span>
+</div>
+<div class="px-2.5 py-1 rounded-full bg-surface-container-low font-label-badge text-label-badge text-on-surface-variant">
+          Tap elements to stir
+        </div>
+</div>
+<!-- Live Neural Link SVG Canvas -->
+<div class="relative w-full h-36 rounded-DEFAULT bg-surface-container-low/60 flex items-center justify-center overflow-hidden p-2">
+<svg class="absolute inset-0 w-full h-full" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<lineargradient id="neuralGrad" x1="0%" x2="100%" y1="0%" y2="100%">
+<stop offset="0%" stop-color="#8455ef" stop-opacity="0.7"></stop>
+<stop offset="100%" stop-color="#b7f249" stop-opacity="0.8"></stop>
+</lineargradient>
+</defs>
+<line opacity="0.45" stroke="#8455ef" stroke-dasharray="4,4" stroke-width="2" x1="18%" x2="52%" y1="35%" y2="48%"></line>
+<line opacity="0.35" stroke="#486800" stroke-width="2" x1="52%" x2="82%" y1="48%" y2="30%"></line>
+<line opacity="0.4" stroke="#6b38d4" stroke-dasharray="3,3" stroke-width="2" x1="52%" x2="68%" y1="48%" y2="78%"></line>
+<line opacity="0.5" stroke="#b7f249" stroke-width="2" x1="18%" x2="32%" y1="35%" y2="78%"></line>
+</svg>
+<!-- Floating Interactive Nodes (Clickable Badges) -->
+<button class="absolute top-4 left-4 px-3 py-1.5 rounded-full bg-surface-container-lowest text-primary font-label-badge text-label-badge shadow-sm transform -rotate-3 transition-transform active:scale-90" id="node-design" onclick="nudgeNode(this)">
+          ✦ DESIGN
+        </button>
+<button class="absolute top-5 right-6 px-3 py-1.5 rounded-full bg-secondary-container text-on-secondary-container font-label-badge text-label-badge shadow-sm transform rotate-2 transition-transform active:scale-90" id="node-code" onclick="nudgeNode(this)">
+          ⚡ CODE
+        </button>
+<button class="absolute bottom-4 left-6 px-3 py-1.5 rounded-full bg-primary-container text-on-primary-container font-label-badge text-label-badge shadow-sm transform rotate-3 transition-transform active:scale-90" id="node-neural" onclick="nudgeNode(this)">
+          🧠 NEURAL NODES
+        </button>
+<button class="absolute bottom-4 right-4 px-3 py-1.5 rounded-full bg-surface-container-highest text-on-surface font-label-badge text-label-badge shadow-sm transform -rotate-2 transition-transform active:scale-90" id="node-curiosity" onclick="nudgeNode(this)">
+          ✨ CURIOSITY
+        </button>
+</div>
+<!-- Skill Synthesizer Bar -->
+<div class="flex flex-col gap-2 pt-1">
+<div class="flex items-center justify-between">
+<span class="font-label-code text-label-code text-on-surface font-semibold">SYNTHESIZE COMBINATION</span>
+<span class="font-label-code text-label-code text-tertiary font-mono" id="prompt-seed">SEED #402</span>
+</div>
+<div class="p-3.5 rounded-DEFAULT bg-surface-container font-body-sm text-body-sm text-on-surface min-h-[52px] flex items-center" id="synthetic-prompt">
+          "Spatial soundscapes modulated by realtime hand gestures on low-power web shaders."
+        </div>
+<button class="w-full mt-1 h-11 rounded-full bg-primary text-on-primary font-headline-sm text-label-code flex items-center justify-center gap-2 hover:bg-primary-container transition-all active:scale-95 shadow-sm" onclick="synthesizeIdea()">
+<span class="material-symbols-outlined text-[18px]">casino</span>
+<span>Mix My Skills (Random Idea Generator)</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Marquee Strip -->
+<div class="w-full bg-on-surface text-surface py-3 overflow-hidden shadow-inner flex items-center">
+<div class="flex whitespace-nowrap gap-6 animate-[marquee_20s_linear_infinite] font-headline-sm text-label-code tracking-widest uppercase">
+<span class="flex items-center gap-2">WEB DESIGN <span class="text-secondary-fixed">✦</span> CREATIVE CODE <span class="text-primary-fixed">✦</span> AI EXPLORATION <span class="text-secondary-fixed">✦</span> UI/UX SYSTEMS <span class="text-primary-fixed">✦</span> PROTOTYPING <span class="text-secondary-fixed">✦</span> LATENT CANVAS <span class="text-primary-fixed">✦</span> ETHICAL AI</span>
+<span class="flex items-center gap-2">WEB DESIGN <span class="text-secondary-fixed">✦</span> CREATIVE CODE <span class="text-primary-fixed">✦</span> AI EXPLORATION <span class="text-secondary-fixed">✦</span> UI/UX SYSTEMS <span class="text-primary-fixed">✦</span> PROTOTYPING <span class="text-secondary-fixed">✦</span> LATENT CANVAS <span class="text-primary-fixed">✦</span> ETHICAL AI</span>
+</div>
+</div>
+<!-- Featured Work Section -->
+<section class="px-4 py-12 max-w-screen-md mx-auto w-full flex flex-col gap-6" id="work">
+<div class="flex flex-col gap-1">
+<div class="inline-flex items-center gap-1.5 text-primary font-label-badge text-label-badge uppercase tracking-wider">
+<span class="material-symbols-outlined text-[16px]">folder_special</span>
+<span>Selected Works</span>
+</div>
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface">
+        Crafted with code, intuition &amp; diffusion.
+      </h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+        Production-ready architectures blended with organic, playful micro-moments.
+      </p>
+</div>
+<!-- Project 1: Synapse Canvas -->
+<article class="rounded-lg bg-surface-container-lowest p-5 shadow-[0_16px_36px_-12px_rgba(107,56,212,0.14)] flex flex-col gap-4">
+<div class="relative w-full h-52 rounded-DEFAULT overflow-hidden bg-surface-container-low">
+<img class="w-full h-full object-cover" data-alt="A clean, minimalist generative prompt-to-UI creative interface showing purple glowing vector graph nodes, floating glass controls, soft ambient studio lighting, off-white card surfaces, and modern typography." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBofxLVMPYhixBLLx-Idc8wFMnE5x8vkIegHAx7M1xIqJOTe_BK3AzOqgd3cKylx6PTdivBweC-EtwCbsf2RhZhZhiy0QRSiN_E4ptQdtdMwEo3WbrFMp5QudoPnjObINQaiViT5LFhxPy4qvDDBwnn0YPEZFzkzPJAFqREXyJbo2O4m7oMk54ZwL0K-hCE9nV_gmPH1UM6asrKLwl62m8hzSjSHo8l1fhhOsjoOf1iPyu-L1mnPMg"/>
+<div class="absolute top-3 left-3 px-3 py-1 rounded-full bg-on-surface/80 backdrop-blur-md text-surface-container-lowest font-label-badge text-label-badge">
+          WEBGL &amp; AI
+        </div>
+<div class="absolute bottom-3 right-3 px-3 py-1 rounded-full bg-primary-container text-on-primary-container font-label-badge text-label-badge shadow">
+          +42% user engagement
+        </div>
+</div>
+<div class="flex flex-col gap-2">
+<div class="flex items-center justify-between">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Synapse Canvas</h3>
+<span class="font-label-code text-label-code text-tertiary">2024</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+          Generative prompt-to-UI workspace with real-time feedback loops. Users describe design systems, and Synapse maps semantic nodes into responsive flexbox components on the fly.
+        </p>
+</div>
+<div class="flex flex-wrap gap-2">
+<span class="px-2.5 py-1 rounded-full bg-surface-container font-label-badge text-label-badge text-on-surface">Next.js 14</span>
+<span class="px-2.5 py-1 rounded-full bg-surface-container font-label-badge text-label-badge text-on-surface">WebGL</span>
+<span class="px-2.5 py-1 rounded-full bg-surface-container font-label-badge text-label-badge text-on-surface">Tailwind</span>
+<span class="px-2.5 py-1 rounded-full bg-primary-fixed font-label-badge text-label-badge text-on-primary-fixed">Streaming LLM</span>
+</div>
+<div class="pt-2 flex items-center justify-between">
+<div class="flex items-center gap-1.5 text-secondary font-label-badge text-label-badge">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+<span>Shipped to 40k Designers</span>
+</div>
+<a class="inline-flex items-center gap-1 text-primary font-headline-sm text-label-code hover:text-on-surface transition-colors" href="#">
+<span>View Case Study</span>
+<span class="material-symbols-outlined text-[16px]">arrow_outward</span>
+</a>
+</div>
+</article>
+<!-- Project 2: Aura Health Copilot -->
+<article class="rounded-lg bg-surface-container-lowest p-5 shadow-md flex flex-col gap-4">
+<div class="relative w-full h-52 rounded-DEFAULT overflow-hidden bg-surface-container-low">
+<img class="w-full h-full object-cover" data-alt="Warm mobile wellness interface with gentle pastel lime and lavender gradients, curved sleep score graphs, calm rounded widgets, and empathetic conversational prompts in soft natural light." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC2y-pkzuR2x2Dt5y4cBCBdGMr3ikBAmcu1BRPkFXQhB-OYeRiChlH-DzfDGRPLY7RbjVCzmfQPZIA2gTdRRPhXK6Dg1QZzo9CdaZXuv-3HurUrpZiKYVC_4GPl6xAkgWxBiGdMU_iBfqAeMeS6CO-R_w1OPegpCkjq05ZHpUc-uIGbsj5EHaIPAiO9rvoZGT-VctLUpn2aPQlfQ1mhZ3I-bOLQpd6P7Tsy3Y7RsFaPrRM3FaxNUDo"/>
+<div class="absolute top-3 left-3 px-3 py-1 rounded-full bg-secondary-container text-on-secondary-container font-label-badge text-label-badge">
+          MOBILE &amp; HEALTH
+        </div>
+<div class="absolute bottom-3 right-3 px-3 py-1 rounded-full bg-surface-container-lowest text-on-surface font-label-badge text-label-badge shadow">
+          18k active beta testers
+        </div>
+</div>
+<div class="flex flex-col gap-2">
+<div class="flex items-center justify-between">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Aura Health Copilot</h3>
+<span class="font-label-code text-label-code text-tertiary">2024</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+          Adaptive wellness companion interface with empathetic micro-interactions. Analyzes wearable sleep patterns and crafts personalized circadian recovery schedules without robotic clinical jargon.
+        </p>
+</div>
+<div class="flex flex-wrap gap-2">
+<span class="px-2.5 py-1 rounded-full bg-surface-container font-label-badge text-label-badge text-on-surface">Lead Product Designer</span>
+<span class="px-2.5 py-1 rounded-full bg-surface-container font-label-badge text-label-badge text-on-surface">Design Tokens</span>
+<span class="px-2.5 py-1 rounded-full bg-secondary-fixed font-label-badge text-label-badge text-on-secondary-fixed-variant">Haptics System</span>
+</div>
+<div class="pt-2 flex items-center justify-between">
+<div class="flex items-center gap-1.5 text-tertiary font-label-badge text-label-badge">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+<span>Apple Human Interface Finalist</span>
+</div>
+<a class="inline-flex items-center gap-1 text-primary font-headline-sm text-label-code hover:text-on-surface transition-colors" href="#">
+<span>View Case Study</span>
+<span class="material-symbols-outlined text-[16px]">arrow_outward</span>
+</a>
+</div>
+</article>
+<!-- Project 3: Latent Type -->
+<article class="rounded-lg bg-surface-container-lowest p-5 shadow-md flex flex-col gap-4">
+<div class="relative w-full h-52 rounded-DEFAULT overflow-hidden bg-surface-container-low">
+<img class="w-full h-full object-cover" data-alt="Experimental typographic poster where black and neon lime letters morph dynamically into fluid 3D organic meshes on a clean neutral background, captured in high resolution editorial layout." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCe0HenObOzQZS5j_RTA5GCXY5m6TECn_7OS5HSWXtHFW4uaYkqk87vqVm7qH42aLB2ScdeE5hTFQsBdLug23Wu2YDrW7NbL77rcFPZ-0LShqBH9o-THMDx0MamSmlHonrTVmi_y0r4QUUrmAoyTC7pTjcPQMRMC9POc8VM_vxbGHktwKgalax5L7Jupbsu4ezzp7MonQaAzUGqfgeR-w5z2Gj1scVxr2C8Y1BVBFLS_xe8wm5lhho"/>
+<div class="absolute top-3 left-3 px-3 py-1 rounded-full bg-tertiary-fixed text-on-tertiary-fixed font-label-badge text-label-badge">
+          CREATIVE EXPERIMENT
+        </div>
+<div class="absolute bottom-3 right-3 px-3 py-1 rounded-full bg-on-surface text-surface font-label-badge text-label-badge shadow">
+          PyTorch + Canvas
+        </div>
+</div>
+<div class="flex flex-col gap-2">
+<div class="flex items-center justify-between">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Latent Type</h3>
+<span class="font-label-code text-label-code text-tertiary">2023</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+          Interactive typographic tool that morphs letterforms via diffusion vectors. Translates prompt sentiments into fluid bezier splines, bridging algorithmic latent space with Swiss typographic rigor.
+        </p>
+</div>
+<div class="flex flex-wrap gap-2">
+<span class="px-2.5 py-1 rounded-full bg-surface-container font-label-badge text-label-badge text-on-surface">PyTorch</span>
+<span class="px-2.5 py-1 rounded-full bg-surface-container font-label-badge text-label-badge text-on-surface">HTML5 Canvas</span>
+<span class="px-2.5 py-1 rounded-full bg-surface-container font-label-badge text-label-badge text-on-surface">Vector Splines</span>
+</div>
+<div class="pt-2 flex items-center justify-between">
+<div class="flex items-center gap-1.5 text-tertiary font-label-badge text-label-badge">
+<span class="material-symbols-outlined text-[16px] text-primary">terminal</span>
+<span>Open Source on GitHub</span>
+</div>
+<a class="inline-flex items-center gap-1 text-primary font-headline-sm text-label-code hover:text-on-surface transition-colors" href="#">
+<span>View Source</span>
+<span class="material-symbols-outlined text-[16px]">arrow_outward</span>
+</a>
+</div>
+</article>
+</section>
+<!-- What I Do: Bento Grid -->
+<section class="px-4 py-10 bg-surface-container-low/60 w-full">
+<div class="max-w-screen-md mx-auto flex flex-col gap-6">
+<div class="flex flex-col gap-1">
+<span class="font-label-badge text-label-badge text-secondary font-bold uppercase tracking-wider">Methodology</span>
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface">What I Do</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">A cross-disciplinary toolkit bridging design taste and machine intelligence.</p>
+</div>
+<div class="grid grid-cols-1 gap-4">
+<!-- Card 1: Adaptive Design Systems -->
+<div class="p-5 rounded-lg bg-surface-container-lowest shadow-sm flex flex-col gap-3">
+<div class="flex items-center justify-between">
+<div class="w-10 h-10 rounded-full bg-primary-fixed flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[20px]">palette</span>
+</div>
+<span class="font-label-code text-label-code text-tertiary uppercase">01 // UI/UX</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Adaptive Design Systems</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+            Token-driven modular component libraries built to scale effortlessly across multiple devices, themes, and screen densities.
+          </p>
+<!-- Mini Interactive Palette Switcher -->
+<div class="pt-2 flex items-center gap-2">
+<span class="font-label-code text-label-code text-on-surface">Live Accent:</span>
+<div class="w-6 h-6 rounded-full bg-primary cursor-pointer ring-2 ring-primary ring-offset-2 transition-all" id="swatch-1" onclick="cycleTheme('violet')"></div>
+<div class="w-6 h-6 rounded-full bg-secondary cursor-pointer transition-all" id="swatch-2" onclick="cycleTheme('lime')"></div>
+<div class="w-6 h-6 rounded-full bg-tertiary cursor-pointer transition-all" id="swatch-3" onclick="cycleTheme('slate')"></div>
+<span class="ml-2 font-label-badge text-label-badge text-tertiary" id="theme-status">Electric Violet</span>
+</div>
+</div>
+<!-- Card 2: Development -->
+<div class="p-5 rounded-lg bg-surface-container-lowest shadow-sm flex flex-col gap-3">
+<div class="flex items-center justify-between">
+<div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary-container">
+<span class="material-symbols-outlined text-[20px]">code</span>
+</div>
+<span class="font-label-code text-label-code text-tertiary uppercase">02 // FRONTEND</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Fast, Accessible Web Apps</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+            Zero-bloat TypeScript, reactive frameworks, and micro-interactions optimized for 60fps animations and keyboard navigation.
+          </p>
+<!-- Code snippet preview -->
+<div class="rounded-DEFAULT bg-inverse-surface p-3 font-mono text-label-code text-inverse-on-surface flex flex-col gap-1">
+<div class="flex items-center gap-1.5 pb-1">
+<span class="w-2.5 h-2.5 rounded-full bg-error"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-secondary-fixed"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-primary-fixed"></span>
+</div>
+<p class="text-secondary-fixed">const <span class="text-surface-container-lowest">experience</span> = await <span class="text-primary-fixed-dim">synthesize</span>({</p>
+<p class="pl-3 text-surface-container-low">delight: <span class="text-secondary-fixed">true</span>, latency: <span class="text-primary-fixed-dim">'sub-50ms'</span></p>
+<p class="text-secondary-fixed">});</p>
+</div>
+</div>
+<!-- Card 3: AI Prototyping -->
+<div class="p-5 rounded-lg bg-surface-container-lowest shadow-sm flex flex-col gap-3">
+<div class="flex items-center justify-between">
+<div class="w-10 h-10 rounded-full bg-primary-fixed-dim flex items-center justify-center text-on-primary-fixed">
+<span class="material-symbols-outlined text-[20px]">cognition</span>
+</div>
+<span class="font-label-code text-label-code text-tertiary uppercase">03 // COGNITION</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Human-in-the-Loop Prototyping</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+            Moving beyond simple text prompts to design spatial, contextual, and multi-modal interfaces that keep human creators in full creative control.
+          </p>
+<div class="flex items-center gap-2 pt-1">
+<span class="px-2.5 py-1 rounded-full bg-surface-container font-label-badge text-label-badge text-on-surface">Evaluation Rigs</span>
+<span class="px-2.5 py-1 rounded-full bg-surface-container font-label-badge text-label-badge text-on-surface">Prompt Heuristics</span>
+<span class="px-2.5 py-1 rounded-full bg-surface-container font-label-badge text-label-badge text-on-surface">Guardrails</span>
+</div>
+</div>
+<!-- Card 4: Generative Visuals -->
+<div class="p-5 rounded-lg bg-surface-container-lowest shadow-sm flex flex-col gap-3">
+<div class="flex items-center justify-between">
+<div class="w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center text-on-surface">
+<span class="material-symbols-outlined text-[20px]">grain</span>
+</div>
+<span class="font-label-code text-label-code text-tertiary uppercase">04 // SHADERS</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Generative Visuals &amp; Shaders</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+            Procedural canvas animations and GLSL experiments that give websites organic warmth, depth, and physical personality.
+          </p>
+<div class="h-16 rounded-DEFAULT bg-surface-container flex items-center justify-around px-4">
+<span class="w-3 h-3 rounded-full bg-primary animate-bounce"></span>
+<span class="w-4 h-4 rounded-full bg-secondary animate-pulse"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-primary-container"></span>
+<span class="w-5 h-5 rounded-full bg-secondary-fixed animate-bounce"></span>
+<span class="w-3.5 h-3.5 rounded-full bg-tertiary"></span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- AI Lab / Currently Learning -->
+<section class="px-4 py-12 max-w-screen-md mx-auto w-full flex flex-col gap-6">
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded-full bg-secondary animate-ping"></span>
+<span class="font-label-badge text-label-badge text-primary uppercase tracking-wider">AI LAB // CURRENTLY LEARNING</span>
+</div>
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface">
+        Unfiltered Experiments &amp; Notes
+      </h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+        Weekly research logs from the frontier of small models and generative interfaces.
+      </p>
+</div>
+<!-- Lab Collectible 1 -->
+<div class="p-5 rounded-lg bg-surface-container-lowest shadow-sm flex flex-col gap-3 relative overflow-hidden">
+<div class="flex items-center justify-between gap-2">
+<span class="font-label-code text-label-code text-tertiary">NOTE #084 • ON-DEVICE</span>
+<span class="px-2.5 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-label-badge text-label-badge">
+          STATUS: SURPRISINGLY FAST
+        </span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Small Language Models in Browser (Phi-3 Mini)</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+<strong>Hypothesis:</strong> Can a 3.8B quantized model run zero-latency semantic search entirely inside WebGPU without cloud roundtrips?
+      </p>
+<div class="p-3 rounded-DEFAULT bg-surface-container-low font-body-sm text-body-sm text-on-surface flex flex-col gap-1">
+<p><span class="text-secondary font-bold">✓ What succeeded:</span> 48 tokens/sec on M2 Safari using WebLLM.</p>
+<p><span class="text-primary font-bold">△ What failed:</span> Context window degradation past 1,800 tokens causes hallucinated UI markup.</p>
+</div>
+<div class="flex items-center justify-between text-tertiary font-label-code text-label-code">
+<span>Framework: WebGPU / ONNX</span>
+<a class="text-primary font-bold hover:underline" href="#">Read Research Note →</a>
+</div>
+</div>
+<!-- Lab Collectible 2 -->
+<div class="p-5 rounded-lg bg-surface-container-lowest shadow-sm flex flex-col gap-3">
+<div class="flex items-center justify-between gap-2">
+<span class="font-label-code text-label-code text-tertiary">NOTE #079 • LATENT GEOMETRY</span>
+<span class="px-2.5 py-0.5 rounded-full bg-primary-fixed text-on-primary-fixed font-label-badge text-label-badge">
+          STATUS: EXPERIMENTAL
+        </span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">StyleGAN Vector Morphing for Iconography</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+        Translating vector control sliders directly into SVG path coordinate vectors to create infinitely malleable iconography sets that respond to user tone.
+      </p>
+<div class="flex items-center justify-between text-tertiary font-label-code text-label-code">
+<span>Framework: Canvas2D / PyTorch</span>
+<a class="text-primary font-bold hover:underline" href="#">Read Research Note →</a>
+</div>
+</div>
+<!-- Lab Collectible 3 -->
+<div class="p-5 rounded-lg bg-surface-container-lowest shadow-sm flex flex-col gap-3">
+<div class="flex items-center justify-between gap-2">
+<span class="font-label-code text-label-code text-tertiary">NOTE #073 • MULTIMODAL SOUND</span>
+<span class="px-2.5 py-0.5 rounded-full bg-surface-container-high text-on-surface-variant font-label-badge text-label-badge">
+          STATUS: TRAINING IN PROGRESS
+        </span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Audio-Reactive Latent Diffusion</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+        Mapping Web Audio API FFT frequency bands into latent noise seeds for real-time generative poster generation in electronic music spaces.
+      </p>
+<div class="flex items-center justify-between text-tertiary font-label-code text-label-code">
+<span>Framework: AudioWorklet / Stable Diffusion Turbo</span>
+<a class="text-primary font-bold hover:underline" href="#">Read Research Note →</a>
+</div>
+</div>
+</section>
+<!-- About & Timeline -->
+<section class="px-4 py-12 bg-surface-container-low/50 w-full">
+<div class="max-w-screen-md mx-auto flex flex-col gap-6">
+<div class="flex flex-col gap-1">
+<span class="font-label-badge text-label-badge text-primary uppercase tracking-wider">Evolution</span>
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface">Timeline &amp; Philosophy</h2>
+</div>
+<!-- Timeline Nodes -->
+<div class="flex flex-col gap-4 relative pl-4 before:content-[''] before:absolute before:left-1 before:top-2 before:bottom-2 before:w-0.5 before:bg-outline-variant">
+<!-- Milestone 1 -->
+<div class="relative flex flex-col gap-1">
+<span class="absolute -left-[19px] top-1.5 w-3 h-3 rounded-full bg-on-surface"></span>
+<div class="flex items-center gap-2">
+<span class="font-label-code text-label-code font-bold text-on-surface">NOW</span>
+<span class="px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-label-badge text-label-badge">AI Systems &amp; Next-Gen UI</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+            Designing fluid user experiences around generative primitives. Consulting for forward-thinking AI product studios.
+          </p>
+</div>
+<!-- Milestone 2 -->
+<div class="relative flex flex-col gap-1">
+<span class="absolute -left-[19px] top-1.5 w-3 h-3 rounded-full bg-primary"></span>
+<div class="flex items-center gap-2">
+<span class="font-label-code text-label-code font-bold text-on-surface">2024</span>
+<span class="font-label-badge text-label-badge text-tertiary">Latent Space Exploration</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+            Deep-dived into tokenization, fine-tuning LLMs, and making synthetic outputs feel intuitive for everyday people.
+          </p>
+</div>
+<!-- Milestone 3 -->
+<div class="relative flex flex-col gap-1">
+<span class="absolute -left-[19px] top-1.5 w-3 h-3 rounded-full bg-outline"></span>
+<div class="flex items-center gap-2">
+<span class="font-label-code text-label-code font-bold text-on-surface">2022</span>
+<span class="font-label-badge text-label-badge text-tertiary">Full Stack Product Systems</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+            Built scalable SaaS design languages and accessible web components supporting millions of daily interactions.
+          </p>
+</div>
+<!-- Milestone 4 -->
+<div class="relative flex flex-col gap-1">
+<span class="absolute -left-[19px] top-1.5 w-3 h-3 rounded-full bg-outline-variant"></span>
+<div class="flex items-center gap-2">
+<span class="font-label-code text-label-code font-bold text-on-surface">2020</span>
+<span class="font-label-badge text-label-badge text-tertiary">Interaction Design Origins</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+            Began crafting tactile mobile prototypes and micro-animations rooted in classic Swiss grid typography.
+          </p>
+</div>
+</div>
+<!-- Personality Pills Bento -->
+<div class="grid grid-cols-1 gap-3 pt-2">
+<div class="p-4 rounded-DEFAULT bg-surface-container-lowest flex items-center gap-3">
+<span class="text-2xl">☕</span>
+<div class="flex flex-col min-w-0">
+<span class="font-label-code text-label-code text-tertiary uppercase">FUEL</span>
+<span class="font-body-sm text-body-sm text-on-surface font-semibold truncate">Specialty pour-overs (Ethiopian natural process)</span>
+</div>
+</div>
+<div class="p-4 rounded-DEFAULT bg-surface-container-lowest flex items-center gap-3">
+<span class="text-2xl">🎹</span>
+<div class="flex flex-col min-w-0">
+<span class="font-label-code text-label-code text-tertiary uppercase">OFFLINE CURIOSITY</span>
+<span class="font-body-sm text-body-sm text-on-surface font-semibold truncate">Patching semi-modular analog synthesizers</span>
+</div>
+</div>
+<div class="p-4 rounded-DEFAULT bg-surface-container-lowest flex items-center gap-3">
+<span class="text-2xl">📖</span>
+<div class="flex flex-col min-w-0">
+<span class="font-label-code text-label-code text-tertiary uppercase">CURRENT READING</span>
+<span class="font-body-sm text-body-sm text-on-surface font-semibold truncate">Latent Space Digest &amp; The Architecture of Intelligence</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Skills Constellation -->
+<section class="px-4 py-12 max-w-screen-md mx-auto w-full flex flex-col gap-6">
+<div class="flex flex-col gap-1">
+<span class="font-label-badge text-label-badge text-secondary font-bold uppercase tracking-wider">Capabilities</span>
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface">The Constellation</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Skills organized by discipline, with zero arbitrary percentage bars.</p>
+</div>
+<!-- Category 1: Design -->
+<div class="flex flex-col gap-2">
+<span class="font-label-code text-label-code font-bold text-on-surface">✦ PRODUCT &amp; DESIGN</span>
+<div class="flex flex-wrap gap-2">
+<span class="px-3 py-1.5 rounded-full bg-surface-container font-label-badge text-label-badge text-on-surface">Design Systems</span>
+<span class="px-3 py-1.5 rounded-full bg-surface-container font-label-badge text-label-badge text-on-surface">Micro-interactions</span>
+<span class="px-3 py-1.5 rounded-full bg-surface-container font-label-badge text-label-badge text-on-surface">Information Architecture</span>
+<span class="px-3 py-1.5 rounded-full bg-surface-container font-label-badge text-label-badge text-on-surface">Prototyping</span>
+<span class="px-3 py-1.5 rounded-full bg-surface-container font-label-badge text-label-badge text-on-surface">Figma Tokens</span>
+</div>
+</div>
+<!-- Category 2: Frontend & Creative Code -->
+<div class="flex flex-col gap-2">
+<span class="font-label-code text-label-code font-bold text-on-surface">⚡ FRONTEND &amp; CODE</span>
+<div class="flex flex-wrap gap-2">
+<span class="px-3 py-1.5 rounded-full bg-surface-container font-label-badge text-label-badge text-on-surface">TypeScript</span>
+<span class="px-3 py-1.5 rounded-full bg-surface-container font-label-badge text-label-badge text-on-surface">React / Next.js</span>
+<span class="px-3 py-1.5 rounded-full bg-surface-container font-label-badge text-label-badge text-on-surface">Tailwind CSS</span>
+<span class="px-3 py-1.5 rounded-full bg-surface-container font-label-badge text-label-badge text-on-surface">WebGL / Three.js</span>
+<span class="px-3 py-1.5 rounded-full bg-surface-container font-label-badge text-label-badge text-on-surface">Web Audio API</span>
+</div>
+</div>
+<!-- Category 3: AI & Latent Space -->
+<div class="flex flex-col gap-2">
+<span class="font-label-code text-label-code font-bold text-on-surface">🧠 AI &amp; MACHINE LEARNING</span>
+<div class="flex flex-wrap gap-2">
+<span class="px-3 py-1.5 rounded-full bg-primary-fixed font-label-badge text-label-badge text-on-primary-fixed">Prompt Engineering</span>
+<span class="px-3 py-1.5 rounded-full bg-primary-fixed font-label-badge text-label-badge text-on-primary-fixed">WebLLM / On-Device</span>
+<span class="px-3 py-1.5 rounded-full bg-primary-fixed font-label-badge text-label-badge text-on-primary-fixed">Vector Embeddings</span>
+<span class="px-3 py-1.5 rounded-full bg-primary-fixed font-label-badge text-label-badge text-on-primary-fixed">LangChain / LlamaIndex</span>
+<span class="px-3 py-1.5 rounded-full bg-primary-fixed font-label-badge text-label-badge text-on-primary-fixed">Human Evaluation</span>
+</div>
+</div>
+</section>
+<!-- Interactive Search / Filter Toy -->
+<section class="px-4 py-8 max-w-screen-md mx-auto w-full">
+<div class="p-5 rounded-lg bg-surface-container-lowest shadow-sm flex flex-col gap-3">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-primary">psychology</span>
+<span class="font-label-code text-label-code text-on-surface font-semibold">ASK MAYA'S AI RECOMMENDER</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+        Filter projects or ask what I'd recommend for your specific challenge:
+      </p>
+<div class="flex items-center gap-2">
+<input class="w-full h-12 px-4 rounded-DEFAULT bg-surface-container font-body-sm text-body-sm text-on-surface outline-none focus:ring-2 focus:ring-primary transition-all" id="ai-recommender-input" placeholder="e.g. Need an AI copilot for mobile..." type="text"/>
+<button class="h-12 px-4 rounded-DEFAULT bg-primary text-on-primary font-label-badge text-label-badge shrink-0 flex items-center justify-center hover:bg-primary-container transition-all" onclick="simulateRecommendation()">
+          Query
+        </button>
+</div>
+<div class="p-3 rounded-DEFAULT bg-surface-container-low font-body-sm text-body-sm text-on-surface hidden" id="ai-response">
+        ✨ <strong>Match Found:</strong> You should inspect the <strong class="text-primary">Aura Health Copilot</strong> case study for adaptive conversational prompts and low-latency micro-interactions.
+      </div>
+</div>
+</section>
+<!-- Contact CTA Section -->
+<section class="px-4 py-12 max-w-screen-md mx-auto w-full flex flex-col gap-6" id="contact">
+<div class="p-6 rounded-lg bg-on-surface text-surface-container-lowest shadow-xl flex flex-col gap-6 relative overflow-hidden">
+<!-- Background subtle decorative circle -->
+<div class="absolute -right-10 -bottom-10 w-48 h-48 rounded-full bg-primary-container/20 blur-2xl pointer-events-none"></div>
+<div class="flex flex-col gap-2">
+<div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container-highest/20 text-secondary-fixed font-label-badge text-label-badge w-fit">
+<span class="w-2 h-2 rounded-full bg-secondary-fixed animate-pulse"></span>
+<span>Open for Q3 &amp; Q4 Projects</span>
+</div>
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-surface-container-lowest">
+          Have an idea or an interesting problem? Let's make something smart.
+        </h2>
+<p class="font-body-sm text-body-sm text-outline-variant">
+          Whether it's an end-to-end product design overhaul, a zero-to-one AI prototype, or exploratory creative technology—send the signal.
+        </p>
+</div>
+<!-- Quick Inquiry Form -->
+<form class="flex flex-col gap-4" onsubmit="handleFormSubmit(event)">
+<div class="flex flex-col gap-1.5">
+<label class="font-label-code text-label-code text-surface-container-low">PROJECT SCOPE</label>
+<div class="flex flex-wrap gap-2">
+<button class="project-chip px-3 py-1.5 rounded-full bg-surface-container-highest/15 text-surface-container-low font-label-badge text-label-badge hover:bg-surface-container-highest/30 transition-colors" onclick="toggleChip(this)" type="button">
+              Product Design
+            </button>
+<button class="project-chip px-3 py-1.5 rounded-full bg-surface-container-highest/15 text-surface-container-low font-label-badge text-label-badge hover:bg-surface-container-highest/30 transition-colors" onclick="toggleChip(this)" type="button">
+              AI Prototype
+            </button>
+<button class="project-chip px-3 py-1.5 rounded-full bg-surface-container-highest/15 text-surface-container-low font-label-badge text-label-badge hover:bg-surface-container-highest/30 transition-colors" onclick="toggleChip(this)" type="button">
+              Full Stack Web
+            </button>
+</div>
+</div>
+<div class="flex flex-col gap-1.5">
+<label class="font-label-code text-label-code text-surface-container-low" for="contact-name">YOUR NAME</label>
+<input class="w-full h-12 px-4 rounded-DEFAULT bg-surface-container-highest/15 text-surface-container-lowest placeholder:text-outline font-body-sm text-body-sm outline-none focus:ring-2 focus:ring-secondary-fixed transition-all" id="contact-name" placeholder="Ada Lovelace" required="" type="text"/>
+</div>
+<div class="flex flex-col gap-1.5">
+<label class="font-label-code text-label-code text-surface-container-low" for="contact-email">EMAIL ADDRESS</label>
+<input class="w-full h-12 px-4 rounded-DEFAULT bg-surface-container-highest/15 text-surface-container-lowest placeholder:text-outline font-body-sm text-body-sm outline-none focus:ring-2 focus:ring-secondary-fixed transition-all" id="contact-email" placeholder="ada@analytical-engine.io" required="" type="email"/>
+</div>
+<div class="flex flex-col gap-1.5">
+<label class="font-label-code text-label-code text-surface-container-low" for="contact-msg">BRIEF VISION</label>
+<textarea class="w-full p-4 rounded-DEFAULT bg-surface-container-highest/15 text-surface-container-lowest placeholder:text-outline font-body-sm text-body-sm outline-none focus:ring-2 focus:ring-secondary-fixed transition-all resize-none" id="contact-msg" placeholder="Tell me about what you are building..." rows="3"></textarea>
+</div>
+<button class="w-full h-12 rounded-full bg-secondary-container text-on-secondary-container font-headline-sm text-label-code flex items-center justify-center gap-2 hover:bg-secondary-fixed transition-all shadow-md active:scale-95" id="submit-btn" type="submit">
+<span>Send the signal</span>
+<span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</form>
+</div>
+</section>
+<!-- Micro-interactions Script -->
+<script>
+    const ideas = [
+      "Spatial soundscapes modulated by realtime hand gestures on low-power web shaders.",
+      "An on-device conversational model that writes customized children's bedtime lullabies.",
+      "A generative Figma plugin that audits accessibility contrast and rewrites microcopy.",
+      "Tactile haptic keyboard triggers based on sentiment analysis of typed sentences.",
+      "A typographic diffusion canvas that morphs glyphs according to ambient room temperature."
+    ];
+
+    function synthesizeIdea() {
+      const promptEl = document.getElementById('synthetic-prompt');
+      const seedEl = document.getElementById('prompt-seed');
+      const randomIdx = Math.floor(Math.random() * ideas.length);
+      const randomSeed = Math.floor(Math.random() * 900) + 100;
+      
+      promptEl.style.opacity = '0';
+      setTimeout(() => {
+        promptEl.textContent = ideas[randomIdx];
+        seedEl.textContent = 'SEED #' + randomSeed;
+        promptEl.style.opacity = '1';
+      }, 150);
+    }
+
+    function nudgeNode(el) {
+      const deg = (Math.random() * 8 - 4).toFixed(1);
+      el.style.transform = `scale(1.1) rotate(${deg}deg)`;
+      setTimeout(() => {
+        el.style.transform = `scale(1) rotate(${deg}deg)`;
+      }, 200);
+    }
+
+    function cycleTheme(type) {
+      const status = document.getElementById('theme-status');
+      if (type === 'violet') {
+        status.textContent = 'Electric Violet';
+      } else if (type === 'lime') {
+        status.textContent = 'Cyber Lime';
+      } else {
+        status.textContent = 'Slate Minimal';
+      }
+    }
+
+    function simulateRecommendation() {
+      const box = document.getElementById('ai-response');
+      box.classList.remove('hidden');
+    }
+
+    function toggleChip(btn) {
+      btn.classList.toggle('bg-secondary-container');
+      btn.classList.toggle('text-on-secondary-container');
+    }
+
+    function handleFormSubmit(e) {
+      e.preventDefault();
+      const btn = document.getElementById('submit-btn');
+      btn.innerHTML = '<span class="material-symbols-outlined text-[18px]">check_circle</span><span>Signal Dispatched!</span>';
+      btn.classList.remove('bg-secondary-container', 'text-on-secondary-container');
+      btn.classList.add('bg-primary-container', 'text-on-primary-container');
+    }
+  </script>
+</div><footer class="w-full mt-auto px-4 pt-8 pb-28 bg-surface-container-low/60 flex flex-col items-center text-center gap-4"><div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface-container-lowest shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span><span class="font-label-badge text-label-badge text-on-surface">Open to Collabs &amp; AI Experiments</span></div><div class="flex items-center justify-center gap-4 text-on-surface-variant"><a class="w-11 h-11 flex items-center justify-center rounded-full hover:bg-surface-container hover:text-primary transition-colors" href="#"><span class="font-label-code text-label-code font-bold">GH</span></a><a class="w-11 h-11 flex items-center justify-center rounded-full hover:bg-surface-container hover:text-primary transition-colors" href="#"><span class="font-label-code text-label-code font-bold">X</span></a><a class="w-11 h-11 flex items-center justify-center rounded-full hover:bg-surface-container hover:text-primary transition-colors" href="#"><span class="font-label-code text-label-code font-bold">LI</span></a><a class="w-11 h-11 flex items-center justify-center rounded-full hover:bg-surface-container hover:text-primary transition-colors" href="#"><span class="font-label-code text-label-code font-bold">CV</span></a></div><p class="font-label-code text-label-code text-tertiary">© 2025 Maya AI &amp; Design • Send the signal</p></footer></main><nav class="fixed bottom-0 w-full z-50 pb-safe bg-surface/85 backdrop-blur-xl shadow-[0_-2px_12px_rgba(107,56,212,0.06)]" data-active-classes="text-primary font-semibold"><div class="flex justify-around items-center h-16 max-w-screen-md mx-auto px-2"><a aria-current="page" class="flex flex-col items-center justify-center gap-0.5 w-14 h-12 rounded-full transition-all text-primary font-semibold" data-path="work" href="#"><span class="material-symbols-outlined text-[20px]">auto_awesome</span><span class="font-label-badge text-[10px] tracking-tight">Work</span></a><a class="flex flex-col items-center justify-center gap-0.5 w-14 h-12 rounded-full text-on-surface-variant hover:text-on-surface transition-all" data-path="ai-lab" href="#"><span class="material-symbols-outlined text-[20px]">science</span><span class="font-label-badge text-[10px] tracking-tight">AI Lab</span></a><a class="flex flex-col items-center justify-center gap-0.5 w-14 h-12 rounded-full text-on-surface-variant hover:text-on-surface transition-all" data-path="playground" href="#"><span class="material-symbols-outlined text-[20px]">magic_button</span><span class="font-label-badge text-[10px] tracking-tight">Play</span></a><a class="flex flex-col items-center justify-center gap-0.5 w-14 h-12 rounded-full text-on-surface-variant hover:text-on-surface transition-all" data-path="about" href="#"><span class="material-symbols-outlined text-[20px]">person</span><span class="font-label-badge text-[10px] tracking-tight">About</span></a><a class="flex flex-col items-center justify-center gap-0.5 w-14 h-12 rounded-full text-on-surface-variant hover:text-on-surface transition-all" data-path="contact" href="#"><span class="material-symbols-outlined text-[20px]">chat</span><span class="font-label-badge text-[10px] tracking-tight">Contact</span></a></div></nav></body></html>

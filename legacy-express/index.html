@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Douyin Admin - Node.js Express Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+  <div class="app">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="logo">
+        <div class="logo-box">D</div>
+        <div class="logo-text">
+          <h2>Douyin Admin</h2>
+          <span class="badge-node">Node.js Server</span>
+        </div>
+      </div>
+
+      <nav class="menu">
+        <a class="active" href="#dashboard">
+          <span class="icon">🏠</span>
+          <span>Dashboard</span>
+        </a>
+        <a href="#orders">
+          <span class="icon">🛒</span>
+          <span>Orders</span>
+          <span class="nav-badge" id="nav-order-count">6</span>
+        </a>
+        <a href="#products">
+          <span class="icon">📦</span>
+          <span>Products</span>
+        </a>
+        <a href="#analytics">
+          <span class="icon">📈</span>
+          <span>Analytics</span>
+        </a>
+        <a href="#customers">
+          <span class="icon">👥</span>
+          <span>Customers</span>
+        </a>
+        <a href="#finance">
+          <span class="icon">💰</span>
+          <span>Finance</span>
+        </a>
+        <a href="#settings">
+          <span class="icon">⚙️</span>
+          <span>Settings</span>
+        </a>
+      </nav>
+
+      <div class="server-status-card">
+        <div class="status-indicator online"></div>
+        <div>
+          <h4>Express 4.x</h4>
+          <p id="server-ping">Status: Online (3000)</p>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main">
+
+      <!-- TOPBAR -->
+      <header class="topbar">
+        <div>
+          <h1>Dashboard</h1>
+          <p>Welcome back, Administrator 👋</p>
+        </div>
+
+        <div class="top-right">
+          <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input
+              type="text"
+              id="search-input"
+              placeholder="ค้นหาสินค้าหรือชื่อลูกค้า..."
+              class="search"
+            />
+          </div>
+
+          <button class="action-btn" id="btn-add-order" title="เพิ่มออเดอร์ใหม่">
+            <span>+</span> เพิ่มออเดอร์
+          </button>
+
+          <button class="notify-btn" id="btn-notify" title="การแจ้งเตือน">
+            🔔
+            <span class="notify-dot"></span>
+          </button>
+
+          <div class="profile">
+            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80" alt="Avatar" />
+            <div class="profile-info">
+              <h4>Hi Na</h4>
+              <p>Administrator</p>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- STATS CARDS -->
+      <section class="stats" id="stats-container">
+        <div class="stat-card purple">
+          <div class="stat-info">
+            <p>Total Sales</p>
+            <h2 id="stat-sales">฿3.25M</h2>
+            <span class="stat-growth" id="stat-sales-growth">↑ +12.5% เดือนนี้</span>
+          </div>
+          <div class="stat-icon-wrap">📈</div>
+        </div>
+
+        <div class="stat-card blue">
+          <div class="stat-info">
+            <p>Customers</p>
+            <h2 id="stat-customers">1,240</h2>
+            <span class="stat-growth" id="stat-customers-growth">↑ +8.2% Active</span>
+          </div>
+          <div class="stat-icon-wrap">👥</div>
+        </div>
+
+        <div class="stat-card dark">
+          <div class="stat-info">
+            <p>Orders</p>
+            <h2 id="stat-orders">5,620</h2>
+            <span class="stat-growth" id="stat-orders-growth">↑ +14.1% สำเร็จ</span>
+          </div>
+          <div class="stat-icon-wrap">🛒</div>
+        </div>
+
+        <div class="stat-card pink">
+          <div class="stat-info">
+            <p>Reviews</p>
+            <h2 id="stat-reviews">4.9</h2>
+            <span class="stat-growth">⭐ จาก 890 รีวิว</span>
+          </div>
+          <div class="stat-icon-wrap">⭐</div>
+        </div>
+      </section>
+
+      <!-- DASHBOARD GRID -->
+      <section class="dashboard-grid">
+
+        <!-- LEFT COLUMN -->
+        <div class="left">
+
+          <!-- SALES ANALYTICS CHART -->
+          <div class="card chart-card">
+            <div class="card-header">
+              <div>
+                <h2>Sales Analytics</h2>
+                <p>สถิติยอดขายรายเดือน (Node.js API Data)</p>
+              </div>
+              <div class="chart-controls">
+                <span class="badge-pill">2026</span>
+                <button class="btn-secondary" id="btn-refresh-analytics">🔄 Refresh</button>
+              </div>
+            </div>
+
+            <div class="chart">
+              <svg viewBox="0 0 900 280" class="chart-svg">
+                <defs>
+                  <linearGradient id="areaGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stop-color="#4f46e5" stop-opacity="0.35"/>
+                    <stop offset="100%" stop-color="#4f46e5" stop-opacity="0.0"/>
+                  </linearGradient>
+                </defs>
+                <!-- Grid Lines -->
+                <line x1="40" y1="50" x2="860" y2="50" stroke="#f1f5f9" stroke-width="1.5" stroke-dasharray="4"/>
+                <line x1="40" y1="110" x2="860" y2="110" stroke="#f1f5f9" stroke-width="1.5" stroke-dasharray="4"/>
+                <line x1="40" y1="170" x2="860" y2="170" stroke="#f1f5f9" stroke-width="1.5" stroke-dasharray="4"/>
+                <line x1="40" y1="230" x2="860" y2="230" stroke="#f1f5f9" stroke-width="1.5"/>
+
+                <!-- Area Fill -->
+                <path d="M 60 210 L 160 185 L 260 140 L 360 160 L 460 100 L 560 120 L 660 70 L 760 50 L 840 25 L 840 230 L 60 230 Z" fill="url(#areaGradient)"/>
+
+                <!-- Main Trend Line -->
+                <path d="M 60 210 Q 110 200 160 185 T 260 140 T 360 160 T 460 100 T 560 120 T 660 70 T 760 50 T 840 25" fill="none" stroke="#4f46e5" stroke-width="4.5" stroke-linecap="round"/>
+
+                <!-- Data Points -->
+                <circle cx="60" cy="210" r="5" fill="#4f46e5" stroke="#fff" stroke-width="2"/>
+                <circle cx="160" cy="185" r="5" fill="#4f46e5" stroke="#fff" stroke-width="2"/>
+                <circle cx="260" cy="140" r="5" fill="#4f46e5" stroke="#fff" stroke-width="2"/>
+                <circle cx="360" cy="160" r="5" fill="#4f46e5" stroke="#fff" stroke-width="2"/>
+                <circle cx="460" cy="100" r="5" fill="#4f46e5" stroke="#fff" stroke-width="2"/>
+                <circle cx="560" cy="120" r="5" fill="#4f46e5" stroke="#fff" stroke-width="2"/>
+                <circle cx="660" cy="70" r="5" fill="#4f46e5" stroke="#fff" stroke-width="2"/>
+                <circle cx="760" cy="50" r="5" fill="#4f46e5" stroke="#fff" stroke-width="2"/>
+                <circle cx="840" cy="25" r="6" fill="#ec4899" stroke="#fff" stroke-width="2.5"/>
+
+                <!-- Month Labels -->
+                <text x="60" y="255" text-anchor="middle" fill="#94a3b8" font-size="12">ม.ค.</text>
+                <text x="160" y="255" text-anchor="middle" fill="#94a3b8" font-size="12">ก.พ.</text>
+                <text x="260" y="255" text-anchor="middle" fill="#94a3b8" font-size="12">มี.ค.</text>
+                <text x="360" y="255" text-anchor="middle" fill="#94a3b8" font-size="12">เม.ย.</text>
+                <text x="460" y="255" text-anchor="middle" fill="#94a3b8" font-size="12">พ.ค.</text>
+                <text x="560" y="255" text-anchor="middle" fill="#94a3b8" font-size="12">มิ.ย.</text>
+                <text x="660" y="255" text-anchor="middle" fill="#94a3b8" font-size="12">ก.ค.</text>
+                <text x="760" y="255" text-anchor="middle" fill="#94a3b8" font-size="12">ส.ค.</text>
+                <text x="840" y="255" text-anchor="middle" fill="#4f46e5" font-weight="bold" font-size="12">ก.ย.</text>
+              </svg>
+            </div>
+          </div>
+
+          <!-- ORDERS TABLE -->
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h2>Recent Orders</h2>
+                <p id="orders-subtitle">รายการคำสั่งซื้อจาก Express API</p>
+              </div>
+
+              <!-- Filter Tabs -->
+              <div class="filter-tabs">
+                <button class="filter-btn active" data-status="all">ทั้งหมด</button>
+                <button class="filter-btn" data-status="success">สำเร็จ</button>
+                <button class="filter-btn" data-status="pending">รอดำเนินการ</button>
+                <button class="filter-btn" data-status="cancel">ยกเลิก</button>
+              </div>
+            </div>
+
+            <div class="table-container">
+              <table class="orders-table">
+                <thead>
+                  <tr>
+                    <th>สินค้า</th>
+                    <th>ลูกค้า</th>
+                    <th>ราคา</th>
+                    <th>สถานะ</th>
+                    <th>จัดการ</th>
+                  </tr>
+                </thead>
+                <tbody id="orders-tbody">
+                  <tr>
+                    <td colspan="5" class="loading-td">กำลังโหลดข้อมูลจาก Node.js API...</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- RIGHT COLUMN -->
+        <div class="right">
+
+          <!-- STORE PERFORMANCE -->
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h2>Store Performance</h2>
+                <p>ประสิทธิภาพร้านค้าสัปดาห์นี้</p>
+              </div>
+              <span class="badge-status online">Live</span>
+            </div>
+
+            <div class="progress-group">
+              <div class="progress-text">
+                <span>Success Rate</span>
+                <span id="perf-rate" class="progress-val">88%</span>
+              </div>
+              <div class="progress">
+                <div class="progress-bar" id="perf-bar" style="width: 88%;"></div>
+              </div>
+            </div>
+
+            <div class="mini-stats">
+              <div class="mini-stat-item">
+                <h3 id="perf-rating">4.9</h3>
+                <p>Ratings</p>
+              </div>
+              <div class="mini-stat-divider"></div>
+              <div class="mini-stat-item">
+                <h3 id="perf-positive">98%</h3>
+                <p>Positive Feedback</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- RECENT ACTIVITY -->
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h2>Recent Activity</h2>
+                <p>ความเคลื่อนไหวล่าสุด</p>
+              </div>
+            </div>
+
+            <div class="activity" id="activity-list">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+
+          <!-- QUICK API INFO CARD -->
+          <div class="card api-info-card">
+            <div class="card-header">
+              <div>
+                <h2>Express REST API</h2>
+                <p>Endpoints ที่พร้อมใช้งาน</p>
+              </div>
+            </div>
+            <ul class="api-endpoints-list">
+              <li><span class="method get">GET</span> <code>/api/stats</code></li>
+              <li><span class="method get">GET</span> <code>/api/orders</code></li>
+              <li><span class="method post">POST</span> <code>/api/orders</code></li>
+              <li><span class="method patch">PATCH</span> <code>/api/orders/:id/status</code></li>
+              <li><span class="method delete">DELETE</span> <code>/api/orders/:id</code></li>
+            </ul>
+          </div>
+
+        </div>
+
+      </section>
+
+    </main>
+
+  </div>
+
+  <!-- MODAL: ADD ORDER -->
+  <div class="modal-backdrop" id="modal-add-order">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>+ เพิ่มรายการออเดอร์ใหม่</h3>
+        <button class="modal-close" id="modal-close-btn">&times;</button>
+      </div>
+      <form id="add-order-form">
+        <div class="form-group">
+          <label for="order-name">ชื่อสินค้า</label>
+          <input type="text" id="order-name" required placeholder="เช่น iPhone 16 Pro Max 256GB" />
+        </div>
+        <div class="form-group">
+          <label for="order-price">ราคา (บาท)</label>
+          <input type="number" id="order-price" required placeholder="เช่น 45000" min="0" />
+        </div>
+        <div class="form-group">
+          <label for="order-customer">ชื่อลูกค้า</label>
+          <input type="text" id="order-customer" placeholder="เช่น คุณสมศรี ใจดี" />
+        </div>
+        <div class="form-group">
+          <label for="order-status">สถานะ</label>
+          <select id="order-status">
+            <option value="pending">Shipping (รอดำเนินการ)</option>
+            <option value="success">Completed (สำเร็จ)</option>
+            <option value="cancel">Cancelled (ยกเลิก)</option>
+          </select>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn-secondary" id="modal-cancel-btn">ยกเลิก</button>
+          <button type="submit" class="btn-primary">บันทึกผ่าน API</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION -->
+  <div id="toast" class="toast"></div>
+
+  <script src="/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,60 @@
+rules_version = '2';
+
+// Cloud Storage security rules — my-portfolio
+//
+// Fail-Closed by Default เช่นเดียวกับ firestore.rules — ยังไม่เปิด path ใด
+//
+// เว็บนี้มีไฟล์ 2 ประเภทที่ต้องแยกกฎกันเด็ดขาด:
+//
+//   1. รูปภาพ/สื่อสาธารณะ (รูปผลงาน, cover บทความ, รูปสินค้า)
+//      อ่านได้ทุกคน เขียนได้เฉพาะ admin
+//
+//   2. ไฟล์สินค้าที่ลูกค้าจ่ายเงินแล้วดาวน์โหลด (.zip ของ template/starter kit)
+//      ห้ามให้ client อ่านตรงจาก Storage เด็ดขาด แม้จะล็อกอินแล้วก็ตาม
+//      เพราะสิทธิ์ดาวน์โหลดขึ้นอยู่กับ order + license + โควตา (downloadLimit)
+//      + วันหมดอายุ (expiresAt) ซึ่งเป็น logic ที่ rules ตรวจไม่ได้
+//      ต้องให้ server ออก signed URL หรือ proxy ไฟล์ผ่าน route handler
+//      (ดู src/app/api/downloads/route.ts และ src/lib/storage.ts)
+//
+// เพิ่มกฎใหม่ได้หลังจาก planner กำหนดโครงสร้าง path แล้วและบันทึกใน docs/architecture_doc.md
+
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    // ---------- helper ----------
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && request.auth.token.role == 'ADMIN';
+    }
+
+    // จำกัดชนิดและขนาดไฟล์ที่อัปโหลดได้ — กันคนยัดไฟล์อะไรก็ได้เข้ามา
+    function isImageUnder5MB() {
+      return request.resource.contentType.matches('image/.*')
+        && request.resource.size < 5 * 1024 * 1024;
+    }
+
+    // ---------- path rules ----------
+    //
+    // ตัวอย่างรูปแบบที่คาดว่าจะใช้ (ยังไม่เปิดใช้):
+    //
+    // match /public/media/{fileName} {
+    //   allow read: if true;
+    //   allow write: if isAdmin() && isImageUnder5MB();
+    // }
+    //
+    // match /products/{productId}/{fileName} {
+    //   // ไฟล์สินค้า: ปิดทั้งอ่านและเขียนจากฝั่ง client
+    //   // การดาวน์โหลดต้องผ่าน server ที่ตรวจ order/license/โควตา/วันหมดอายุก่อน
+    //   allow read, write: if false;
+    // }
+
+    // ---------- Fail-Closed default ----------
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

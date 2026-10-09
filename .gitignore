@@ -1,0 +1,49 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Next.js
+.next
+out
+
+# Environment (ห้าม commit ค่าจริง — ดู .env.example เป็นแบบ)
+.env
+.env.local
+.env*.local
+
+# static export build
+.next-static
+out
+
+# Claude Code — การตั้งค่าส่วนตัวต่อเครื่อง (ไม่ใช่ของทีม)
+# หมายเหตุ: pattern *.local ด้านบนไม่ครอบไฟล์นี้ เพราะชื่อจบด้วย .json
+.claude/settings.local.json
+
+# Build cache / local database (ไม่ควรเข้า repo)
+tsconfig.tsbuildinfo
+prisma/dev.db
+prisma/dev.db-journal
+
+# Firebase CLI local cache
+.firebase/

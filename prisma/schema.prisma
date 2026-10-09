@@ -1,0 +1,143 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id        String     @id @default(cuid())
+  email     String     @unique
+  name      String?
+  role      String     @default("CUSTOMER") // "CUSTOMER" | "ADMIN"
+  orders    Order[]
+  downloads Download[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+model Product {
+  id          String           @id @default(cuid())
+  title       String
+  slug        String           @unique
+  description String
+  price       Float
+  category    String           // "templates" | "components" | "apis" | "ai" | "free"
+  framework   String           // "Next.js" | "Node.js" | "React" | "PyTorch"
+  rating      Float            @default(4.9)
+  reviewCount Int              @default(24)
+  badge       String?          // "NEW DROP" | "AI POWERED" | "PRO TOOL" | "FREE" | "UPDATED"
+  demoUrl     String?
+  githubUrl   String?
+  fileKey     String           // reference key in secure storage
+  fileSize    String           // e.g. "14.2 MB"
+  version     String           @default("1.0.0")
+  published   Boolean          @default(true)
+  orderItems  OrderItem[]
+  downloads   Download[]
+  versions    ProductVersion[]
+  licenses    License[]
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+}
+
+model ProductVersion {
+  id             String   @id @default(cuid())
+  productId      String
+  product        Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  version        String
+  changelog      String
+  minNodeVersion String   @default(">= 18.0.0")
+  fileKey        String
+  fileSize       String
+  publishedAt    DateTime @default(now())
+}
+
+model License {
+  id             String   @id @default(cuid())
+  productId      String
+  product        Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  name           String   // "Personal" | "Commercial" | "Extended" | "Open Source"
+  multiplier     Float    @default(1.0)
+  usageTerms     String
+  updateDuration String   @default("12 Months")
+}
+
+model Order {
+  id            String      @id @default(cuid())
+  userId        String?
+  user          User?       @relation(fields: [userId], references: [id], onDelete: SetNull)
+  customerEmail String
+  customerName  String?
+  total         Float
+  currency      String      @default("THB")
+  status        String      @default("PAID") // "PENDING" | "PAID" | "FAILED"
+  discountCode  String?
+  items         OrderItem[]
+  downloads     Download[]
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+}
+
+model OrderItem {
+  id          String   @id @default(cuid())
+  orderId     String
+  order       Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId   String
+  product     Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  licenseType String   @default("Personal") // "Personal" | "Commercial" | "Extended" | "Open Source"
+  price       Float
+}
+
+model Download {
+  id            String    @id @default(cuid())
+  token         String    @unique @default(cuid())
+  orderId       String
+  order         Order     @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId     String
+  product       Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+  userId        String?
+  user          User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+  downloadLimit Int       @default(5)
+  downloadCount Int       @default(0)
+  expiresAt     DateTime
+  createdAt     DateTime  @default(now())
+}
+
+model Post {
+  id               String   @id @default(cuid())
+  title            String
+  slug             String   @unique
+  excerpt          String
+  content          String
+  category         String   // "ai-ml" | "nodejs-backend" | "frontend" | "design" | "tutorials" | "case-studies"
+  coverImage       String
+  readTime         String   // e.g. "6 min read"
+  featured         Boolean  @default(false)
+  published        Boolean  @default(true)
+  relatedProductId String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+model Customer {
+  id          String   @id @default(cuid())
+  email       String   @unique
+  name        String
+  totalSpend  Float    @default(0)
+  totalOrders Int      @default(0)
+  status      String   @default("ACTIVE") // "ACTIVE" | "SUSPENDED"
+  joinedAt    DateTime @default(now())
+}
+
+model ActivityLog {
+  id        String   @id @default(cuid())
+  user      String
+  avatar    String
+  action    String
+  target    String
+  type      String   // "product" | "order" | "blog" | "security"
+  createdAt DateTime @default(now())
+}

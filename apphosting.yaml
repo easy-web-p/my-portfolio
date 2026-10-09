@@ -1,0 +1,132 @@
+# Firebase App Hosting — my-portfolio
+#
+# App Hosting รองรับ Next.js แบบ full-stack (SSR, route handler, dynamic route)
+# ต่างจาก Firebase Hosting เดิมที่เสิร์ฟไฟล์ static เท่านั้น
+# ไฟล์นี้ต้อง commit เข้า repo เพราะ App Hosting อ่านจาก GitHub ตอน build
+#
+# สิ่งที่ต้องมีก่อนใช้ไฟล์นี้ได้:
+#   1. project ต้องอยู่บนแผน Blaze — ตรวจจาก Firebase Console แล้วตอนนี้ยังเป็น Spark
+#   2. สร้าง App Hosting backend; ใช้ GitHub connection หรือ Firebase CLI deploy จาก local source ได้
+#   3. เพิ่ม Stripe secret และ webhook endpoint หลังทราบ production domain จริง
+
+# ---------- Cloud Run runtime ----------
+# ตั้งค่าแบบประหยัดสำหรับเว็บพอร์ตโฟลิโอ
+runConfig:
+  # scale to zero — ไม่มีคนเข้าก็ไม่เสียค่า instance
+  minInstances: 0
+  # เพดานกันค่าใช้จ่ายพุ่ง ถ้าโดน traffic spike หรือ bot
+  # ปรับขึ้นได้ถ้าเว็บเริ่มมีคนเข้าจริงจัง
+  maxInstances: 2
+  # จำนวน request ที่ instance เดียวรับพร้อมกัน
+  concurrency: 80
+  cpu: 1
+  memoryMiB: 512
+
+# ---------- Environment variables ----------
+# BUILD  = ใช้ตอน next build (จำเป็นสำหรับ NEXT_PUBLIC_* เพราะ Next.js ฝังค่าลง bundle ตอน build)
+# RUNTIME = ใช้ตอน server ทำงาน
+#
+# ค่า Firebase web config ใส่เป็น value ตรงๆ ได้ เพราะถูกส่งไปฝั่ง browser
+# โดยการออกแบบของ Firebase อยู่แล้ว ไม่ใช่ความลับ
+# การป้องกันที่แท้จริงอยู่ที่ firestore.rules / storage.rules + การจำกัด API key
+env:
+  - variable: NEXT_PUBLIC_FIREBASE_API_KEY
+    value: AIzaSyAcqwDZLb9kA7qAGqTGB1R7iUn1KKzFzuM
+    availability:
+      - BUILD
+      - RUNTIME
+
+  - variable: NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN
+    value: my--project-adc0e.firebaseapp.com
+    availability:
+      - BUILD
+      - RUNTIME
+
+  - variable: NEXT_PUBLIC_FIREBASE_PROJECT_ID
+    value: my--project-adc0e
+    availability:
+      - BUILD
+      - RUNTIME
+
+  - variable: NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET
+    value: my--project-adc0e.firebasestorage.app
+    availability:
+      - BUILD
+      - RUNTIME
+
+  - variable: NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID
+    value: "925578687432"
+    availability:
+      - BUILD
+      - RUNTIME
+
+  - variable: NEXT_PUBLIC_FIREBASE_APP_ID
+    value: "1:925578687432:web:29c6664055bdea035786fd"
+    availability:
+      - BUILD
+      - RUNTIME
+
+  - variable: NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
+    value: G-BJ0ZG8ZESX
+    availability:
+      - BUILD
+      - RUNTIME
+
+  # ต้องเป็น false บน production — true ใช้เฉพาะตอน dev ที่มี emulator รันอยู่ในเครื่อง
+  - variable: NEXT_PUBLIC_FIREBASE_USE_EMULATOR
+    value: "false"
+    availability:
+      - BUILD
+      - RUNTIME
+
+  # คีย์นี้ออกแบบให้ฝังใน browser bundle ได้; คีย์ลับ Stripe อยู่ใน Secret Manager เท่านั้น
+  - variable: NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
+    value: pk_live_51UODroErkXzCvAE23LsOjLVaFCTWSqOfuW0pjvZMBrTY7TkabDpJVvtEtm3PXNrkES7zx8L661Tj7NRqC0n95Ok500ESDA8Fjd
+    availability:
+      - BUILD
+      - RUNTIME
+
+  # URL จริงของเว็บ ใช้โดย metadataBase, sitemap.ts และ robots.ts
+  # แก้เป็นโดเมนจริงหลังสร้าง backend เสร็จ (App Hosting จะให้ URL มา)
+  - variable: NEXT_PUBLIC_SITE_URL
+    value: https://my--project-adc0e.web.app
+    availability:
+      - BUILD
+      - RUNTIME
+
+  # ---------- ความลับจริง ใช้ secret: ไม่ใช่ value: ----------
+  # ค่าพวกนี้ห้ามเขียนลงไฟล์นี้เพราะไฟล์นี้อยู่ใน git
+  # เก็บเข้า Cloud Secret Manager ก่อนด้วย:
+  #   firebase apphosting:secrets:set resend-api-key
+  #   firebase apphosting:secrets:set contact-receiver-email
+  # แล้วเปิดคอมเมนต์ข้างล่าง (ตอนนี้ปิดไว้ เพราะถ้า secret ยังไม่มีจริง build จะล้ม)
+  #
+  # - variable: RESEND_API_KEY
+  #   secret: resend-api-key
+  #   availability:
+  #     - RUNTIME
+  #
+  # - variable: CONTACT_RECEIVER_EMAIL
+  #   secret: contact-receiver-email
+  #   availability:
+  #     - RUNTIME
+  #
+  # Stripe และการส่งมอบ source code — ต้องเปิดใช้งานบน App Hosting ก่อนขายจริง:
+  #   firebase apphosting:secrets:set stripe-secret-key
+  #   firebase apphosting:secrets:set stripe-webhook-secret
+  # แล้วเปิด 2 block ด้านล่าง และสร้าง Stripe webhook มาที่
+  # https://<production-domain>/api/webhooks
+  #
+  # - variable: STRIPE_SECRET_KEY
+  #   secret: stripe-secret-key
+  #   availability:
+  #     - RUNTIME
+  #
+  # - variable: STRIPE_WEBHOOK_SECRET
+  #   secret: stripe-webhook-secret
+  #   availability:
+  #     - RUNTIME
+  #
+  # NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET ที่ประกาศข้างบนถูกใช้เป็นชื่อ bucket
+  # ฝั่ง server เพื่อส่งไฟล์ที่ตรวจสิทธิ์แล้ว; App Hosting service account ต้องมี
+  # สิทธิ์อ่าน object ใน path products/ เท่านั้น.

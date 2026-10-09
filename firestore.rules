@@ -1,0 +1,72 @@
+rules_version = '2';
+
+// Firestore security rules — my-portfolio
+//
+// หลักการของโปรเจกต์นี้คือ Fail-Closed by Default: ยังไม่มี collection ใดเปิดให้เข้าถึง
+// ต้องเพิ่ม match block ทีละ collection อย่างจงใจเท่านั้น
+//
+// ข้อควรรู้เรื่องวิธีทำงานของ rules: เงื่อนไขจากหลาย match block ถูกนำมา OR กัน
+// แปลว่า catch-all `allow read, write: if false;` ด้านล่าง "ไม่ได้" ล็อกทุกอย่างทับ
+// match อื่น — ถ้า match ไหน allow ไว้ อันนั้นจะผ่าน catch-all นี้จึงทำหน้าที่เป็น
+// ค่าตั้งต้นสำหรับ path ที่ไม่มีใครเขียนกฎไว้ ไม่ใช่กำแพงกันทุกอย่าง
+//
+// ก่อนเพิ่มกฎใหม่: data model ต้องผ่าน planner และบันทึกใน docs/architecture_doc.md ก่อน
+// ทดสอบกฎด้วย emulator: firebase emulators:start
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ---------- helper ----------
+    //
+    // หมายเหตุ: ตอน compile จะเห็น warning "Invalid variable name: request"
+    // ที่บรรทัดใน helper เหล่านี้ เป็น warning ของ linter ไม่ใช่ error — rules
+    // compile ผ่านและ `request` เข้าถึงได้จริงตอน runtime ตามที่ Firebase ออกแบบไว้
+    // ส่วน warning "Unused function" จะหายไปเองเมื่อเริ่มเขียนกฎ collection จริง
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    // role มาจาก custom claims ของ Firebase Auth เท่านั้น
+    // ห้ามอ่าน role จาก document ที่ client เขียนเองได้ เพราะจะยกระดับสิทธิ์ตัวเองได้
+    function isAdmin() {
+      return isSignedIn() && request.auth.token.role == 'ADMIN';
+    }
+
+    function isOwner(uid) {
+      return isSignedIn() && request.auth.uid == uid;
+    }
+
+    // ---------- collection rules ----------
+    //
+    // ยังไม่มี collection ใดถูกเปิด — เพิ่มที่นี่ทีละอันเมื่อ planner กำหนด schema แล้ว
+    //
+    // ตัวอย่างรูปแบบที่คาดว่าจะใช้ (ยังไม่เปิดใช้ อย่าลอกไปวางโดยไม่ตรวจ):
+    //
+    // match /products/{productId} {
+    //   // สินค้าที่เผยแพร่แล้วอ่านได้ทุกคน แต่เขียนได้เฉพาะ admin
+    //   allow read: if resource.data.published == true || isAdmin();
+    //   allow write: if isAdmin();
+    // }
+    //
+    // match /orders/{orderId} {
+    //   // คำสั่งซื้ออ่านได้เฉพาะเจ้าของกับ admin
+    //   allow read: if isOwner(resource.data.userId) || isAdmin();
+    //   // ห้าม client สร้าง order เอง — ต้องผ่าน server (route handler ที่ verify ID token)
+    //   // เพราะราคาและสิทธิ์ license ต้องคำนวณฝั่ง server ไม่เชื่อค่าจาก client
+    //   allow create, update, delete: if false;
+    // }
+    //
+    // match /downloads/{downloadId} {
+    //   // download token ต้องออกและนับโควตาฝั่ง server เท่านั้น
+    //   allow read: if isOwner(resource.data.userId) || isAdmin();
+    //   allow write: if false;
+    // }
+
+    // ---------- Fail-Closed default ----------
+    // ทุก path ที่ไม่มีกฎข้างบนครอบ = เข้าถึงไม่ได้
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
