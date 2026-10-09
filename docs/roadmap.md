@@ -5,13 +5,18 @@
 
 ---
 
-## Phase 0: Version Control Baseline [TODO]
-ต้องเสร็จก่อนเปิด Phase 1 เพราะ `reviewer` ตรวจ diff ไม่ได้ถ้าไม่มี git
-- [ ] `git init` + `.gitignore` ครอบ `node_modules/`, `.next/`, `prisma/dev.db`, `tsconfig.tsbuildinfo`, `.env*`
-- [ ] ตัดสินใจเรื่อง `portfolio-doc.pdf` (55 MB) — ไม่ควร track เข้า git
-- [ ] commit baseline ของสภาพปัจจุบัน (human checkpoint ก่อน commit)
+## Phase 0: Version Control Baseline [DONE — 2026-10-09]
+- [x] `git init -b main` + commit baseline `7c355d3` (225 ไฟล์)
+- [x] `.gitignore` ครอบ `node_modules`, `.next`, `out`, `.next-static`, `.env*`, `prisma/dev.db`, `tsconfig.tsbuildinfo`, `.firebase/`, `.claude/settings.local.json`
+- [x] ลบ PDF ซ้ำ 2 ไฟล์ (MD5 ตรงกันทั้งสาม) ประหยัด ~106 MB — เหลือ `public/documents/portfolio-phisit.pdf` ที่โค้ดอ้าง 7 จุด
+- [x] ต่อ GitHub: `https://github.com/easy-web-p/my-portfolio` (**public**) · `main` tracking `origin/main`
+- [x] identity ระดับ repo: `easy-web-p <181621251+easy-web-p@users.noreply.github.com>` (global ยังเป็น placeholder "อีเมลที่ใช้กับ GitHub" — กระทบ my-QueueUp-app ด้วย ยังไม่แก้)
 
-## Phase 1: Foundation & Integrity [TODO]
+**ผลที่ตามมา:** `reviewer` ใช้ diff review ได้แล้ว ไม่ต้องใช้โหมด file-level fallback อีก
+
+**ค้างไว้:** `public/documents/portfolio-phisit.pdf` 53.25 MB เกินค่าที่ GitHub แนะนำ (50 MB) — push ผ่านแต่มี warning พิจารณาย้ายขึ้น Firebase Storage หรือใช้ Git LFS
+
+## Phase 1: Foundation & Integrity [กำลังทำ — 2026-10-09: ปิด critical แล้ว]
 เป้า: ปิดช่องโหว่ที่ทำให้เว็บดูไม่น่าเชื่อถือ และทำให้ตัวตนผู้ใช้มีแหล่งความจริงเดียว
 
 > **ตัดสินใจแล้ว (2026-10-08):** ใช้ **Firebase Auth** แทนระบบ login ปัจจุบัน
@@ -19,15 +24,19 @@
 > งานที่เหลือต้องใช้ `firebase-admin` ฝั่ง server เพื่อ verify ID token และตั้ง custom claim `role: 'ADMIN'`
 > ให้ตรงกับที่ `firestore.rules` / `storage.rules` ตรวจ — service account key เป็นความลับจริง ห้าม commit
 
-- [ ] **auth guard หน้า `/admin`** — ยืนยันแล้วว่าทั้ง 22 หน้าเข้าได้โดยไม่ต้องล็อกอิน (`src/app/admin/layout.tsx` ไม่มี guard)
-- [ ] session ฝั่ง server แหล่งเดียว แทน `src/lib/auth.ts` ที่คืน mock `ADMIN` ตายตัว
-- [ ] ตั้ง custom claim `role` ให้ user และ verify ID token ฝั่ง server (ห้ามเชื่อ auth state ฝั่ง client)
-- [ ] deploy `firestore.rules` ขึ้น project จริง (`firebase deploy --only firestore:rules`) — ตอนนี้ไฟล์ fail-closed อยู่ในโปรเจกต์แต่ยังไม่ขึ้น
-- [ ] ลบตัวตน hardcode ที่กระจายอยู่ (`alex.mercer@example.com` ใน `src/app/dashboard/page.tsx:9`, `settings/page.tsx:8`, `orders/[id]/page.tsx:74`)
-- [ ] guard หน้า `/dashboard/*` ให้เห็นได้แต่ข้อมูลของตัวเอง
-- [ ] route handler ใน `src/app/api/` เช็คสิทธิ์ฝั่ง server เอง + validate ด้วย zod ทุกตัว
+- [x] **auth guard หน้า `/admin`** — `src/app/admin/layout.tsx` เป็น server component เรียก `requireAdmin()` · ทดสอบจริง ทุกหน้าคืน **307 → /login?next=/admin** (ก่อนแก้ได้ 200 เต็มหน้า) · UI เดิมย้ายไป `src/components/admin/admin-shell.tsx` ไม่เปลี่ยน markup
+- [x] session ฝั่ง server แหล่งเดียว — `src/lib/session.ts` (`getSession`/`requireUser`/`requireAdmin`) อ่าน cookie `__session` แล้ว `verifySessionCookie(checkRevoked=true)` · **ลบ `src/lib/auth.ts` ทิ้งแล้ว**
+- [x] ตั้ง custom claim `role` + verify ฝั่ง server — `scripts/set-admin-claim.mjs` และ `POST /api/auth/session` ที่ `verifyIdToken(checkRevoked)` + บังคับว่าต้องเพิ่งล็อกอินภายใน 5 นาที
+- [x] **ปิดทางเลี่ยงที่หน้า login** — ของเดิมมี dropdown เลือก role เองและปุ่ม "Quick Prototype Sign-in" ที่ `router.push('/admin')` โดยไม่ต้องกรอกอะไรเลย ตัดออกทั้งคู่ เปลี่ยนเป็น `signInWithEmailAndPassword` แล้วแลกเป็น session cookie
+- [ ] deploy `firestore.rules` ขึ้น project จริง (`firebase deploy --only firestore:rules`) — ยังไม่ขึ้น แต่ตรวจแล้วว่า default rules ของ DB ปิดอยู่ (REST probe โดยไม่ล็อกอิน คืน 403 PERMISSION_DENIED)
+- [ ] ลบตัวตน hardcode ที่กระจายอยู่ (`alex.mercer@example.com` ใน `src/app/dashboard/page.tsx:9`, `settings/page.tsx:8`, `orders/[id]/page.tsx:74`) — guard ปิดการเข้าถึงได้แล้ว แต่ข้อมูลที่โชว์ยังเป็น mock ไม่ใช่ของผู้ใช้ที่ล็อกอินจริง
+- [x] guard หน้า `/dashboard/*` — `src/app/dashboard/layout.tsx` เรียก `requireUser()` · ทดสอบจริง **307 → /login?next=/dashboard** (ส่วน "เห็นได้แต่ข้อมูลของตัวเอง" รออยู่ในข้อ hardcode ด้านบน)
+- [ ] route handler ที่เหลือใน `src/app/api/` เช็คสิทธิ์ฝั่ง server เอง (`checkout`, `downloads`, `contact` ยังไม่เช็ค · `auth/session` เช็คแล้ว + validate ด้วย zod)
 - [ ] `src/app/api/webhooks/route.ts` ตรวจลายเซ็น webhook ไม่ใช่เชื่อ payload
 - [ ] auditor ผ่าน 0 critical/high ก่อนปิด Phase
+
+**ต้องทำก่อนใช้หลังบ้านได้จริง:** สร้าง service account key แล้วตั้ง `GOOGLE_APPLICATION_CREDENTIALS` (ดู `.env.example`) → สมัครบัญชีที่ `/register` → รัน `node scripts/set-admin-claim.mjs <email>` → ออกจากระบบแล้วเข้าใหม่
+> ถ้าไม่มี credential guard จะ redirect ทุกคนออกเสมอ — เป็น fail-closed ตามเจตนา ไม่ใช่บั๊ก
 
 ## Phase 2: Data Layer ของจริง [TODO]
 เป้า: 1 โดเมน = 1 แหล่งข้อมูล และของที่ต้องคงอยู่ต้องไม่หายตอน restart
@@ -82,7 +91,7 @@
 
 **ติดอยู่ที่ 3 เรื่องซึ่งต้องให้เจ้าของเว็บทำเอง:**
 - [ ] อัปเกรด project `my--project-adc0e` เป็นแผน **Blaze** — App Hosting ใช้บน Spark ไม่ได้ (CLI ยืนยันแล้ว)
-- [ ] push โค้ดขึ้น **GitHub** — App Hosting build จาก branch บน GitHub ไม่ใช่จากเครื่อง (ต้องทำ Phase 0 `git init` ก่อน)
+- [x] push โค้ดขึ้น **GitHub** — เสร็จ 2026-10-09: `easy-web-p/my-portfolio` branch `main`
 - [ ] `firebase init apphosting` เพื่อสร้าง backend และผูก repo/branch — เป็น interactive CLI ต้องรันเอง
 
 หลังสร้าง backend เสร็จ:

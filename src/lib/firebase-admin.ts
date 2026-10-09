@@ -1,6 +1,7 @@
 import 'server-only';
 
 import { applicationDefault, getApp, getApps, initializeApp, type App } from 'firebase-admin/app';
+import { getAuth } from 'firebase-admin/auth';
 import { getFirestore } from 'firebase-admin/firestore';
 import { getStorage } from 'firebase-admin/storage';
 
@@ -28,6 +29,17 @@ function getFirebaseAdminApp(): App {
 
 export function getAdminFirestore() {
   return getFirestore(getFirebaseAdminApp());
+}
+
+/**
+ * Firebase Auth ฝั่ง server — ใช้ verify ID token / session cookie และอ่าน custom claims
+ *
+ * นี่คือที่เดียวที่ตัดสินสิทธิ์ได้จริง เพราะ token ถูกเซ็นด้วย key ของ Google
+ * และตรวจซ้ำฝั่งเราเอง ส่วน auth state ฝั่ง client บอกได้แค่ว่าเบราว์เซอร์นี้
+ * ล็อกอินเป็นใคร ซึ่งปลอมได้ ห้ามใช้ตัดสินสิทธิ์
+ */
+export function getAdminAuth() {
+  return getAuth(getFirebaseAdminApp());
 }
 
 export function getPrivateProductBucket() {

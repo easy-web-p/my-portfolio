@@ -71,3 +71,43 @@
 ### Low
 - `/dashboard/orders/[id]` prerender จาก id ที่ hardcode ใน `src/app/dashboard/orders/[id]/layout.tsx`
   id อื่นจะ 404 — เป็นข้อจำกัดโดยธรรมชาติของ static hosting ไม่ใช่บั๊ก
+
+---
+
+## [2026-10-09] ปิด finding ระดับ Critical — Phase 1
+
+### หลักฐานที่รัน
+| คำสั่ง | ผล |
+|---|---|
+| `curl` (ไม่ส่ง cookie) ไปยัง `/admin`, `/admin/orders`, `/admin/settings` | **307 → `/login?next=%2Fadmin`** ทั้งหมด (ก่อนแก้: 200 พร้อมเนื้อหาเต็ม) |
+| เดียวกันกับ `/dashboard`, `/dashboard/downloads` | **307 → `/login?next=%2Fdashboard`** |
+| `/` และ `/login` | 200 (หน้า public ไม่กระทบ) |
+| `npm run build` | 22 หน้าใต้ `/admin` + 5 หน้าใต้ `/dashboard` เปลี่ยนจาก `○` static เป็น `ƒ` dynamic |
+| `npx tsc --noEmit` | 0 error |
+
+### แก้แล้ว
+- **[critical] `src/app/admin/layout.tsx` ไม่มี guard** → ปิดแล้ว
+  layout เป็น server component เรียก `requireAdmin()` จาก `src/lib/session.ts`
+  UI เดิมย้ายไป `src/components/admin/admin-shell.tsx` โดยไม่เปลี่ยน markup
+  role อ่านจาก custom claims เท่านั้น ให้ตรงกับที่ `firestore.rules` ตรวจ (`request.auth.token.role`)
+
+- **[high] `src/lib/auth.ts` คืน role `ADMIN` ตายตัว** → ลบไฟล์ทิ้ง (ไม่มีใครอ้างถึง)
+
+- **[high — ไม่เคยถูกบันทึก เจอตอนทำ Phase 1] หน้า login เป็นทางเลี่ยง guard**
+  ของเดิมมี dropdown ให้ผู้ใช้เลือกว่าจะเป็น admin แล้ว `router.push('/admin')` ตรงๆ
+  และมีปุ่ม "Quick Prototype Sign-in → 🛡️ Admin Console" ที่เข้าหลังบ้านได้โดยไม่ต้องกรอกอะไรเลย
+  → ตัดออกทั้งคู่ เปลี่ยนเป็นล็อกอินจริงแล้วแลก ID token เป็น session cookie แบบ httpOnly
+
+- **[high] ไม่มี session จริง** → `POST/DELETE /api/auth/session`
+  ใช้ cookie ชื่อ `__session` เพราะ CDN ของ Firebase Hosting / App Hosting
+  ตัด cookie ทุกตัวทิ้งยกเว้นชื่อนี้ — ตั้งชื่ออื่นจะทำงานตอน dev แต่พังเงียบๆ บน production
+
+### ยังค้าง (High)
+- ตัวตนใน `/dashboard/*` ยัง hardcode `alex.mercer@example.com` แยกจาก session จริง (เข้าถึงถูกกั้นแล้ว แต่ข้อมูลที่โชว์ยังเป็น mock)
+- `src/app/api/webhooks/route.ts` ยังไม่ตรวจลายเซ็น
+- route handler `checkout` / `downloads` ยังไม่เช็คสิทธิ์ฝั่ง server
+- `firestore.rules` ยังไม่ deploy (default rules ของ DB ปิดอยู่ — probe คืน 403)
+
+### หมายเหตุสำหรับ auditor รอบถัดไป
+Phase นี้ **ยังปิดไม่ได้** เพราะยังมี high ค้าง 4 ข้อ
+และยังไม่มีใครตรวจงานชุด Stripe (`src/lib/stripe.ts`, `checkout-orders.ts`, `api/checkout/status`, `stripe-payment-*.tsx`) ที่เข้ามาโดยไม่ผ่าน reviewer

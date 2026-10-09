@@ -3,40 +3,84 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { getFirebaseAuth } from '@/lib/firebase';
 
+/**
+ * หน้าเข้าสู่ระบบ — ล็อกอินจริงด้วย Firebase Auth
+ *
+ * ของเดิมเป็นฟอร์มหลอก: มี dropdown ให้เลือกเองว่าจะเป็น customer หรือ admin
+ * แล้ว router.push('/admin') ตรงๆ พร้อมปุ่ม "Quick Prototype Sign-in" ที่เข้า
+ * หลังบ้านได้โดยไม่ต้องกรอกอะไรเลย ทั้งสองอย่างถูกตัดออกเพราะเป็นทางเลี่ยง
+ * guard โดยตรง และเพราะ role ต้องมาจาก custom claims ฝั่ง server เท่านั้น
+ * ผู้ใช้เลือกเองไม่ได้
+ *
+ * ขั้นตอนหลังกด Sign In:
+ *   1. signInWithEmailAndPassword -> ได้ ID token (อยู่ในหน่วยความจำ ไม่เก็บลง storage)
+ *   2. POST /api/auth/session -> server ตรวจ token แล้วออก session cookie แบบ httpOnly
+ *   3. redirect ตาม role ที่ server ตอบกลับ (ไม่ใช่ที่ client เดา)
+ */
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [role, setRole] = useState<'customer' | 'admin'>('customer');
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState('');
   const router = useRouter();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     setMessage('');
 
-    setTimeout(() => {
-      setIsLoading(false);
-      if (role === 'admin') {
-        router.push('/admin');
-      } else {
-        router.push('/dashboard');
-      }
-    }, 600);
-  };
+    try {
+      const { signInWithEmailAndPassword } = await import('firebase/auth');
+      const auth = await getFirebaseAuth();
+      const credential = await signInWithEmailAndPassword(auth, email, password);
+      const idToken = await credential.user.getIdToken();
 
-  const handleQuickLogin = (selectedRole: 'customer' | 'admin') => {
-    setIsLoading(true);
-    if (selectedRole === 'admin') {
-      setEmail('admin@playful-intelligence.dev');
-      setPassword('••••••••••••');
-      setTimeout(() => router.push('/admin'), 400);
-    } else {
-      setEmail('customer@example.com');
-      setPassword('••••••••••••');
-      setTimeout(() => router.push('/dashboard'), 400);
+      const res = await fetch('/api/auth/session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ idToken }),
+      });
+
+      if (!res.ok) {
+        setMessage('Could not start your session. Please try again.');
+        setIsLoading(false);
+        return;
+      }
+
+      const data: { role?: 'ADMIN' | 'CUSTOMER' } = await res.json();
+
+      // อ่าน ?next= จาก URL ตรงๆ แทน useSearchParams() เพื่อไม่ต้องห่อ Suspense
+      // (useSearchParams ในหน้าที่ถูก prerender ต้องมี Suspense boundary ไม่งั้น build ไม่ผ่าน)
+      const next = new URLSearchParams(window.location.search).get('next');
+      const fallback = data.role === 'ADMIN' ? '/admin' : '/dashboard';
+
+      // รับเฉพาะ path ภายในเว็บ กัน open redirect ไปโดเมนอื่น
+      const target = next && next.startsWith('/') && !next.startsWith('//') ? next : fallback;
+
+      router.push(target);
+    } catch (err: unknown) {
+      const code = (err as { code?: string })?.code ?? '';
+
+      // ไม่แยกว่า "ไม่มีอีเมลนี้" กับ "รหัสผิด" เพื่อไม่ให้ใช้หน้านี้ไล่เดาว่า
+      // อีเมลไหนมีบัญชีอยู่
+      if (
+        code === 'auth/invalid-credential' ||
+        code === 'auth/wrong-password' ||
+        code === 'auth/user-not-found' ||
+        code === 'auth/invalid-email'
+      ) {
+        setMessage('Incorrect email or password.');
+      } else if (code === 'auth/too-many-requests') {
+        setMessage('Too many attempts. Please wait a moment and try again.');
+      } else if (code === 'auth/network-request-failed') {
+        setMessage('Network error. Check your connection and try again.');
+      } else {
+        setMessage('Sign-in failed. Please try again.');
+      }
+
+      setIsLoading(false);
     }
   };
 
@@ -63,50 +107,32 @@ export default function LoginPage() {
 
         {/* Auth Card */}
         <div className="bg-surface-container-lowest dark:bg-surface/80 rounded-3xl p-6 sm:p-8 border border-outline-variant/20 shadow-xl backdrop-blur-xl">
-          {/* Role Segmented Selector */}
-          <div className="p-1 rounded-xl bg-surface-container-low dark:bg-surface border border-outline-variant/15 flex gap-1 mb-6">
-            <button
-              type="button"
-              onClick={() => setRole('customer')}
-              className={`flex-1 py-1.5 text-xs font-semibold rounded-lg transition-all cursor-pointer ${
-                role === 'customer'
-                  ? 'bg-primary text-white shadow-xs font-bold'
-                  : 'text-on-surface-variant hover:text-on-surface'
-              }`}
-            >
-              Customer Account
-            </button>
-            <button
-              type="button"
-              onClick={() => setRole('admin')}
-              className={`flex-1 py-1.5 text-xs font-semibold rounded-lg transition-all cursor-pointer ${
-                role === 'admin'
-                  ? 'bg-primary text-white shadow-xs font-bold'
-                  : 'text-on-surface-variant hover:text-on-surface'
-              }`}
-            >
-              Admin Console
-            </button>
-          </div>
-
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-xs font-bold text-on-surface uppercase tracking-wider mb-1.5">
+              <label
+                htmlFor="login-email"
+                className="block text-xs font-bold text-on-surface uppercase tracking-wider mb-1.5"
+              >
                 Email Address
               </label>
               <input
+                id="login-email"
                 type="email"
                 required
+                autoComplete="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder={role === 'admin' ? 'admin@playful-intelligence.dev' : 'you@example.com'}
+                placeholder="you@example.com"
                 className="w-full px-4 py-2.5 rounded-xl bg-surface-container-low dark:bg-surface border border-outline-variant/20 focus:outline-none focus:border-primary text-xs font-medium text-on-surface"
               />
             </div>
 
             <div>
               <div className="flex items-center justify-between mb-1.5">
-                <label className="text-xs font-bold text-on-surface uppercase tracking-wider">
+                <label
+                  htmlFor="login-password"
+                  className="text-xs font-bold text-on-surface uppercase tracking-wider"
+                >
                   Password
                 </label>
                 <Link
@@ -117,8 +143,10 @@ export default function LoginPage() {
                 </Link>
               </div>
               <input
+                id="login-password"
                 type="password"
                 required
+                autoComplete="current-password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••••••"
@@ -126,12 +154,14 @@ export default function LoginPage() {
               />
             </div>
 
-            <div className="flex items-center justify-between text-xs">
-              <label className="flex items-center gap-2 cursor-pointer select-none text-on-surface-variant">
-                <input type="checkbox" className="rounded text-primary focus:ring-0" defaultChecked />
-                <span>Remember this device</span>
-              </label>
-            </div>
+            {message && (
+              <p
+                role="alert"
+                className="text-xs font-semibold text-error bg-error-container/60 rounded-xl px-3 py-2"
+              >
+                {message}
+              </p>
+            )}
 
             <button
               type="submit"
@@ -144,33 +174,10 @@ export default function LoginPage() {
                   <span>Verifying Session...</span>
                 </>
               ) : (
-                <span>Sign In as {role === 'admin' ? 'Administrator' : 'Customer'}</span>
+                <span>Sign In</span>
               )}
             </button>
           </form>
-
-          {/* Quick Evaluation Logins */}
-          <div className="mt-6 pt-5 border-t border-surface-container">
-            <span className="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider block mb-2 text-center">
-              Quick Prototype Sign-in:
-            </span>
-            <div className="grid grid-cols-2 gap-2">
-              <button
-                type="button"
-                onClick={() => handleQuickLogin('customer')}
-                className="py-1.5 px-3 rounded-lg bg-surface-container hover:bg-surface-container-high text-[11px] font-semibold text-on-surface transition-colors text-center"
-              >
-                👤 Customer Demo
-              </button>
-              <button
-                type="button"
-                onClick={() => handleQuickLogin('admin')}
-                className="py-1.5 px-3 rounded-lg bg-surface-container hover:bg-surface-container-high text-[11px] font-semibold text-on-surface transition-colors text-center"
-              >
-                🛡️ Admin Console
-              </button>
-            </div>
-          </div>
         </div>
 
         {/* Footer Link */}
