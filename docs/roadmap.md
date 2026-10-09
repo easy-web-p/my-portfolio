@@ -47,9 +47,11 @@
 > ตั้งค่าไว้ที่ `firebase.json`, `firestore.rules`, `storage.rules` แล้ว (ยังไม่ deploy)
 > ผลที่ตามมา: **Prisma กลายเป็นของที่ต้องลบออก** ไม่ใช่ของที่ต้องต่อ
 
-- [ ] ลบ Prisma ออก (`prisma/`, `src/lib/database.ts`, dependency `prisma` + `@prisma/client`) — schema 10 model ไม่มีใคร import อยู่แล้ว แต่ให้ `planner` อนุมัติก่อนลบ และเก็บ schema ไว้เป็นอ้างอิงตอนออกแบบ collection ของ Firestore
-- [ ] ออกแบบ collection ของ Firestore (planner) → เขียนกฎจริงใน `firestore.rules` แทน block ตัวอย่างที่คอมเมนต์ไว้
-- [ ] ย้ายข้อมูลสินค้า/ออเดอร์จาก mock array ไป Firestore (`src/lib/store.ts`)
+- [x] **ลบ Prisma ออกแล้ว** — `prisma/`, `src/lib/database.ts`, dependency `prisma` + `@prisma/client` · schema เก็บเป็นเอกสารที่ `docs/reference/legacy-prisma-schema.prisma`
+- [x] **ลบโมดูลตายที่ถูกแทนแล้ว** — `src/lib/storage.ts` (token ใน memory ที่หายตอน restart) และ `src/lib/payments.ts` ถูกแทนด้วย `checkout-orders.ts` + `stripe.ts` ไปแล้ว ไม่มีใคร import
+- [x] **แก้ป้ายข้อมูลเท็จใน UI หลังบ้าน** — `/admin/settings` และ topbar เคยโฆษณาว่า "Prisma SQLite ORM Storage · file:./dev.db (Healthy)" ซึ่งไม่เป็นความจริงเลยตั้งแต่ต้น เปลี่ยนเป็น Cloud Firestore ตามของจริง
+- [x] เขียนกฎจริงใน `firestore.rules` / `storage.rules` แทน block ตัวอย่าง — ครอบ `checkoutOrders/{reference}`, subcollection `downloads/{token}`, `stripeWebhookEvents/{eventId}` และ path `products/{fileName}` ของ Storage · **กฎที่ถูกต้องคือปฏิเสธฝั่ง client ทั้งหมด** เพราะไม่มีโค้ด client แตะ Firestore เลย และ Admin SDK ไม่ถูกตรวจด้วย rules · ยืนยันด้วย `firebase deploy --only firestore --dry-run` → compiled successfully
+- [x] ~~ย้ายสินค้าไป Firestore~~ → **ตัดสินใจไม่ย้าย** (เหตุผลใน `docs/architecture_doc.md` หัวข้อ 4) · ออเดอร์/สิทธิ์ดาวน์โหลดอยู่ใน Firestore แล้วผ่าน `src/lib/checkout-orders.ts`
 - [ ] ผลงาน/บทความ **คงไว้เป็น MDX** — เป็นเนื้อหาจริงที่ version ไปกับ git ดีกว่าอยู่ใน DB
 - [ ] download token ใน `src/lib/storage.ts` ย้ายออกจาก in-memory (ลูกค้าที่จ่ายเงินแล้วจะโหลดไฟล์ไม่ได้หลัง restart)
 - [ ] ราคา/ส่วนลด/license multiplier คำนวณซ้ำฝั่ง server ไม่เชื่อค่าจาก client

@@ -1,3 +1,14 @@
+// เก็บไว้เป็นเอกสารอ้างอิงเท่านั้น — ไม่ใช่ schema ที่ใช้งานจริงอีกแล้ว
+//
+// Prisma ถูกถอนออกเมื่อ 2026-10-09 (Phase 2): schema นี้นิยาม 10 model ไว้ครบ
+// แต่ไม่มีไฟล์ไหนใน src/ import เลยตลอดอายุโปรเจกต์ และ provider เป็น
+// SQLite (file:./dev.db) ซึ่งใช้บน serverless ไม่ได้
+//
+// เก็บไว้เพราะการออกแบบความสัมพันธ์ (Order -> OrderItem -> Download -> License)
+// ยังมีประโยชน์ตอนออกแบบ collection ของ Firestore
+// ของจริงที่ใช้อยู่: checkoutOrders/{reference} + subcollection downloads/{token}
+// และ stripeWebhookEvents/{eventId} (ดู src/lib/checkout-orders.ts)
+
 generator client {
   provider = "prisma-client-js"
 }

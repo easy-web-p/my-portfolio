@@ -38,18 +38,30 @@ Next.js 16.3.4 (App Router + Turbopack) · React 19.2 · TypeScript · Tailwind 
 |---|---|---|---|
 | ผลงาน | MDX + `fs` → **server-only** | `src/lib/projects.ts`, `src/content/projects/*.mdx` | ของจริง 5 โครงงาน มีรางวัลอ้างอิง **ห้ามแตะเนื้อหาโดยไม่ถามเจ้าของ** |
 | บทความ | MDX + `fs` → server-only | `src/lib/blog.ts`, `src/content/articles/` | |
-| สินค้า | mock array ใน source | `src/lib/store.ts` | ราคาเป็น THB |
-| AI experiments | mock array | `src/lib/experiments.ts` | |
-| download token | object ใน memory | `src/lib/storage.ts` | **หายตอน restart** |
-| session | mock ตายตัว role `ADMIN` | `src/lib/auth.ts` | |
-| admin stats | ตัวเลข hardcode ในหน้า | `src/lib/admin.ts`, `src/app/admin/*/page.tsx` | สกุลเงิน `$` |
-| Prisma | schema 10 model | `prisma/schema.prisma`, `src/lib/database.ts` | **ไม่มีไฟล์ไหน import** — จะลบออก (Phase 2) |
-| Firebase | init แล้ว ยังไม่มี collection | `src/lib/firebase.ts`, `firestore.rules`, `storage.rules` | **ปลายทางของ data layer** rules ยัง fail-closed ทั้งหมด ยังไม่ deploy |
+| สินค้า (catalog) | array ใน source — **เจตนา** ไม่ใช่ของค้าง | `src/lib/store.ts` | ราคาเป็น THB · ถือเป็น "เนื้อหา" แบบเดียวกับ MDX ดูเหตุผลด้านล่าง |
+| AI experiments | array ใน source | `src/lib/experiments.ts` | เนื้อหา เช่นเดียวกัน |
+| **คำสั่งซื้อ** | **Cloud Firestore** `checkoutOrders/{reference}` | `src/lib/checkout-orders.ts` | สถานะมาจาก Stripe webhook ที่ verify ลายเซ็นแล้วเท่านั้น |
+| **สิทธิ์ดาวน์โหลด** | **Firestore** `checkoutOrders/{ref}/downloads/{token}` | เดียวกัน | โควตา + วันหมดอายุ หักแบบ atomic ใน transaction |
+| **webhook idempotency** | **Firestore** `stripeWebhookEvents/{eventId}` | เดียวกัน | กันประมวลผล event ซ้ำ |
+| **ไฟล์สินค้า** | **Cloud Storage** (bucket ส่วนตัว) | `src/lib/firebase-admin.ts` | server proxy ผ่าน `/api/downloads` ไม่แจก public/signed URL |
+| **session / role** | **Firebase Auth** + session cookie `__session` | `src/lib/session.ts` | role จาก custom claims เท่านั้น |
+| admin stats | ตัวเลข hardcode ในหน้า | `src/lib/admin.ts`, `src/app/admin/*/page.tsx` | สกุลเงินยังปน `$` (Phase 3) |
 
 **กฎ:** 1 โดเมน = 1 แหล่งข้อมูล — ห้ามให้ข้อมูลเดียวกันมาจาก 2 ที่
-**ตัดสินใจแล้ว (2026-10-08):** Firestore เป็น data layer, Cloud Storage เก็บไฟล์, Firebase Auth เป็นระบบ login
-ผลงาน/บทความคงไว้เป็น MDX เพราะเป็นเนื้อหาจริงที่ควร version ไปกับ git
-**TBD:** โครงสร้าง collection ของ Firestore — `planner` ต้องออกแบบก่อนเขียนกฎจริงใน `firestore.rules`
+
+### ทำไมรายการสินค้าไม่ย้ายเข้า Firestore (ตัดสินใจ 2026-10-09)
+roadmap เดิมเขียนว่าจะย้าย `STORE_PRODUCTS` เข้า Firestore — ตรวจแล้วว่า**ไม่ควรทำ**:
+- ถูกใช้ **14 ไฟล์** รวม client component (`cart-context.tsx`, `license-selector.tsx`, `code/[slug]/page.tsx`) ซึ่งอ่าน Firestore ฝั่ง server ไม่ได้
+- `sitemap.ts` และ `generateStaticParams` ของ `/code/[slug]` รันตอน build → ต้องมี admin credential ตอน build
+- **พัง static export** (`BUILD_TARGET=static`) ที่ deploy ลง Firebase Hosting ไปแล้ว
+- สินค้ามี 5 ชิ้นและแทบไม่เปลี่ยน = เป็น *เนื้อหา* เหมือน MDX ที่ตัดสินใจเก็บใน git ไปแล้วด้วยเหตุผลเดียวกัน
+
+สิ่งที่ต้องอยู่ใน DB คือข้อมูลที่เปลี่ยนตลอดและต้องคงอยู่ (ออเดอร์ / สิทธิ์ดาวน์โหลด / webhook) — **ซึ่งอยู่ใน Firestore แล้วทั้งหมด**
+
+### ไม่มีการเข้าถึง Firestore/Storage จากฝั่ง client เลย
+`getFirebaseDb()` และ `getFirebaseStorage()` ใน `src/lib/firebase.ts` ไม่ถูกเรียกจากที่ไหน
+ทุกอย่างผ่าน Admin SDK ใน route handler **ซึ่ง bypass security rules** ดังนั้นกฎใน
+`firestore.rules` / `storage.rules` ทำหน้าที่เดียวคือปิดประตูฝั่ง client ให้สนิท
 
 ## 5. Auth & Permission Matrix — TBD (Phase 1)
 สถานะปัจจุบัน: **ไม่มี guard เลย** ทุกเส้นทางเปิดหมด ยืนยันด้วย request โดยไม่มี cookie แล้วได้ 200

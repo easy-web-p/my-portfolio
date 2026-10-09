@@ -171,3 +171,56 @@ Phase นี้ **ยังปิดไม่ได้** เพราะยั�
 ### สถานะ Phase 1
 critical: **0** · high ที่ยังค้าง: **1** (deploy `firestore.rules`)
 ยังปิด Phase ไม่ได้จนกว่าจะ deploy rules และยืนยันเรื่อง cookie บน App Hosting
+
+---
+
+## [2026-10-09 รอบ 3] Phase 2 — Data Layer
+
+### หลักฐานที่รัน
+| คำสั่ง | ผล |
+|---|---|
+| `grep -rn "getFirebaseDb\|getFirebaseStorage" src` (ตัดไฟล์นิยาม) | **ไม่พบการเรียกเลย** — ไม่มีโค้ด client แตะ Firestore/Storage |
+| `grep -rn "from '@/lib/storage'" src` | ไม่พบ — โมดูลตาย |
+| `grep -rn "from '@/lib/payments'" src` | ไม่พบ — โมดูลตาย |
+| `grep -rn "@prisma/client\|lib/database" src` | พบแต่ `database.ts` ที่ import ตัวเอง ไม่มีใคร import มัน |
+| `grep -rln "from '@/lib/store'" src` | **14 ไฟล์** |
+| `firebase deploy --only firestore --dry-run` | rules compiled successfully |
+| `npx tsc --noEmit` / `npm run build` | 0 error / สำเร็จ |
+
+### แก้แล้ว
+- **[medium] Prisma ที่ถูกทิ้ง** → ถอนออกหมด: `prisma/`, `src/lib/database.ts`, dependency `prisma` + `@prisma/client`
+  schema เก็บเป็นเอกสารที่ `docs/reference/legacy-prisma-schema.prisma` เพราะการออกแบบ
+  ความสัมพันธ์ยังมีประโยชน์ตอนออกแบบ collection
+  ปิด finding "SQLite ใช้บน serverless ไม่ได้" ไปด้วยโดยปริยาย
+
+- **[high] `src/lib/storage.ts` เก็บ download token ใน memory (หายตอน restart)** → **ลบไฟล์ทิ้ง**
+  ไม่ใช่แก้ให้ persist แต่พบว่ามันตายไปแล้ว — ถูกแทนด้วย `src/lib/checkout-orders.ts`
+  ที่เก็บใน Firestore พร้อม transaction หักโควตา ไม่มีใคร import `storage.ts` เลย
+  ลบ `src/lib/payments.ts` ที่ตายเหมือนกันไปด้วย
+
+- **[medium] UI หลังบ้านแสดงข้อมูลเท็จ** → แก้แล้ว
+  `/admin/settings` แสดง "Prisma SQLite ORM Storage · Database: file:./dev.db (Healthy)"
+  และ topbar แสดง "Prisma SQLite Synced · All database models healthy"
+  ทั้งสองไม่เป็นความจริงเลยตั้งแต่ต้น (Prisma ไม่เคยถูกใช้) เปลี่ยนเป็น Cloud Firestore
+  พร้อมชื่อ collection จริง
+
+- **[medium] `firestore.rules` / `storage.rules` มีแต่ตัวอย่างที่คอมเมนต์ไว้** → เขียนกฎจริง
+  ครอบ `checkoutOrders/{reference}`, `downloads/{token}`, `stripeWebhookEvents/{eventId}`
+  และ `products/{fileName}` ของ Storage
+  **ข้อสรุปสำคัญ: กฎที่ถูกต้องคือปฏิเสธฝั่ง client ทั้งหมด** — ไม่ใช่เพราะขี้เกียจ
+  แต่เพราะ (ก) ไม่มีโค้ด client แตะ Firestore เลย (ข) Admin SDK ไม่ถูกตรวจด้วย rules
+  (ค) สิทธิ์ดาวน์โหลดขึ้นกับโควตา/วันหมดอายุที่ต้องหักแบบ atomic ซึ่ง rules ทำแทนไม่ได้
+  (ง) เอกสารออเดอร์เก็บ `accessToken` ถ้าอ่านได้ = แจกสิทธิ์ดาวน์โหลด
+  เขียนแบบเจาะจงต่อ collection เพื่อประกาศเจตนา ไม่ปล่อยให้ catch-all จับเงียบๆ
+
+### ตัดสินใจทวนแผน — ไม่ย้ายสินค้าไป Firestore
+roadmap เดิมสั่งย้าย `STORE_PRODUCTS` เข้า Firestore ตรวจแล้วว่าจะเสียมากกว่าได้:
+ถูกใช้ 14 ไฟล์รวม client component · `sitemap.ts` กับ `generateStaticParams` รันตอน build
+จึงต้องมี admin credential ตอน build · และ**พัง static export ที่ deploy ลง Hosting ไปแล้ว**
+สินค้า 5 ชิ้นที่แทบไม่เปลี่ยนคือเนื้อหา เหมือน MDX ที่ตัดสินใจเก็บใน git ด้วยเหตุผลเดียวกัน
+บันทึกเหตุผลไว้ใน `docs/architecture_doc.md` หัวข้อ 4
+
+### สถานะ
+Phase 2: **เสร็จ** (ปรับขอบเขตตามที่ตรวจพบ)
+Phase 1: critical 0 · high ค้าง 1 — `firebase deploy --only firestore:rules` (ตอนนี้มีกฎจริงให้ deploy แล้ว)
+ค้างข้ามเฟส: เรื่อง cookie `phisit_checkout_<ref>` กับ CDN ที่ต้องทดลองซื้อจริงบน App Hosting

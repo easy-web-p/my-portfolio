@@ -2,26 +2,22 @@ rules_version = '2';
 
 // Cloud Storage security rules — my-portfolio
 //
-// Fail-Closed by Default เช่นเดียวกับ firestore.rules — ยังไม่เปิด path ใด
+// สถานะจริง (ตรวจเมื่อ 2026-10-09):
+// ไม่มีโค้ดฝั่ง client อ่านหรือเขียน Storage เลย (`getFirebaseStorage()`
+// ใน src/lib/firebase.ts ไม่ถูกเรียกจากที่ไหน) ทุกอย่างผ่าน Admin SDK ฝั่ง server
 //
-// เว็บนี้มีไฟล์ 2 ประเภทที่ต้องแยกกฎกันเด็ดขาด:
+// เช่นเดียวกับ firestore.rules: **Admin SDK ไม่ถูกตรวจด้วยกฎในไฟล์นี้**
+// ไฟล์นี้มีหน้าที่เดียวคือปิดประตูฝั่ง client
 //
-//   1. รูปภาพ/สื่อสาธารณะ (รูปผลงาน, cover บทความ, รูปสินค้า)
-//      อ่านได้ทุกคน เขียนได้เฉพาะ admin
-//
-//   2. ไฟล์สินค้าที่ลูกค้าจ่ายเงินแล้วดาวน์โหลด (.zip ของ template/starter kit)
-//      ห้ามให้ client อ่านตรงจาก Storage เด็ดขาด แม้จะล็อกอินแล้วก็ตาม
-//      เพราะสิทธิ์ดาวน์โหลดขึ้นอยู่กับ order + license + โควตา (downloadLimit)
-//      + วันหมดอายุ (expiresAt) ซึ่งเป็น logic ที่ rules ตรวจไม่ได้
-//      ต้องให้ server ออก signed URL หรือ proxy ไฟล์ผ่าน route handler
-//      (ดู src/app/api/downloads/route.ts และ src/lib/storage.ts)
-//
-// เพิ่มกฎใหม่ได้หลังจาก planner กำหนดโครงสร้าง path แล้วและบันทึกใน docs/architecture_doc.md
+// deploy: firebase deploy --only storage
+// (ต้องเปิดใช้ Storage ใน Firebase console ก่อน ไม่งั้น CLI จะตอบว่า
+//  "Firebase Storage has not been set up on project")
 
 service firebase.storage {
   match /b/{bucket}/o {
 
     // ---------- helper ----------
+    // เก็บไว้เป็นรูปแบบพร้อมใช้ตอนที่มี path ที่ client ต้องเข้าถึงจริง
 
     function isSignedIn() {
       return request.auth != null;
@@ -31,25 +27,34 @@ service firebase.storage {
       return isSignedIn() && request.auth.token.role == 'ADMIN';
     }
 
-    // จำกัดชนิดและขนาดไฟล์ที่อัปโหลดได้ — กันคนยัดไฟล์อะไรก็ได้เข้ามา
+    // จำกัดชนิดและขนาดไฟล์ กันคนยัดไฟล์อะไรก็ได้เข้ามา
     function isImageUnder5MB() {
       return request.resource.contentType.matches('image/.*')
         && request.resource.size < 5 * 1024 * 1024;
     }
 
-    // ---------- path rules ----------
+    // ---------- ไฟล์สินค้าที่ลูกค้าจ่ายเงินแล้วดาวน์โหลด ----------
     //
-    // ตัวอย่างรูปแบบที่คาดว่าจะใช้ (ยังไม่เปิดใช้):
+    // path จริงมาจาก productObjectPath() ใน src/lib/firebase-admin.ts
+    // = `${PRODUCT_STORAGE_PREFIX ?? 'products'}/${fileKey}`
+    //
+    // ปิดสนิททั้งอ่านและเขียนจากฝั่ง client แม้ล็อกอินแล้วก็ตาม เพราะสิทธิ์
+    // ดาวน์โหลดขึ้นกับออเดอร์ + license + โควตา + วันหมดอายุ ซึ่ง rules ตรวจไม่ได้
+    //
+    // ลูกค้าได้ไฟล์ผ่าน GET /api/downloads ที่ server ตรวจสิทธิ์ หักโควตา
+    // แล้ว proxy ไฟล์ให้ — ไม่มีการแจก public URL หรือ signed URL อายุยาว
+    match /products/{fileName} {
+      allow read, write: if false;
+    }
+
+    // ---------- สื่อสาธารณะ (ยังไม่เปิดใช้) ----------
+    //
+    // ตอนนี้รูปภาพทั้งหมดอยู่ใน public/images/ ของ repo ไม่ได้อยู่บน Storage
+    // ถ้าวันหนึ่งหน้า /admin/media อัปโหลดขึ้น Storage จริง ให้เปิดบล็อกนี้
     //
     // match /public/media/{fileName} {
     //   allow read: if true;
     //   allow write: if isAdmin() && isImageUnder5MB();
-    // }
-    //
-    // match /products/{productId}/{fileName} {
-    //   // ไฟล์สินค้า: ปิดทั้งอ่านและเขียนจากฝั่ง client
-    //   // การดาวน์โหลดต้องผ่าน server ที่ตรวจ order/license/โควตา/วันหมดอายุก่อน
-    //   allow read, write: if false;
     // }
 
     // ---------- Fail-Closed default ----------

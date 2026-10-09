@@ -2,69 +2,80 @@ rules_version = '2';
 
 // Firestore security rules — my-portfolio
 //
-// หลักการของโปรเจกต์นี้คือ Fail-Closed by Default: ยังไม่มี collection ใดเปิดให้เข้าถึง
-// ต้องเพิ่ม match block ทีละ collection อย่างจงใจเท่านั้น
+// สถานะจริงของโปรเจกต์นี้ (ตรวจเมื่อ 2026-10-09):
+// **ไม่มีโค้ดฝั่ง client อ่านหรือเขียน Firestore เลยแม้แต่ที่เดียว**
+// (`getFirebaseDb()` ใน src/lib/firebase.ts ไม่ถูกเรียกจากที่ไหน)
+// ทุกการเข้าถึงข้อมูลไปผ่าน Admin SDK ใน route handler ฝั่ง server เท่านั้น
 //
-// ข้อควรรู้เรื่องวิธีทำงานของ rules: เงื่อนไขจากหลาย match block ถูกนำมา OR กัน
-// แปลว่า catch-all `allow read, write: if false;` ด้านล่าง "ไม่ได้" ล็อกทุกอย่างทับ
-// match อื่น — ถ้า match ไหน allow ไว้ อันนั้นจะผ่าน catch-all นี้จึงทำหน้าที่เป็น
-// ค่าตั้งต้นสำหรับ path ที่ไม่มีใครเขียนกฎไว้ ไม่ใช่กำแพงกันทุกอย่าง
+// ข้อสำคัญที่ต้องเข้าใจ: **Admin SDK ไม่ถูกตรวจด้วยกฎในไฟล์นี้**
+// มันใช้สิทธิ์ service account จึงผ่านทุกอย่างอยู่แล้ว ไฟล์นี้จึงทำหน้าที่เดียว
+// คือปิดประตูฝั่ง client ให้สนิท — ไม่ใช่ควบคุม logic ของแอป
 //
-// ก่อนเพิ่มกฎใหม่: data model ต้องผ่าน planner และบันทึกใน docs/architecture_doc.md ก่อน
-// ทดสอบกฎด้วย emulator: firebase emulators:start
+// ผลคือกฎที่ถูกต้องสำหรับทุก collection ที่มีอยู่ตอนนี้คือ "ปฏิเสธทั้งหมด"
+// และเขียนไว้แบบเจาะจงต่อ collection เพื่อประกาศเจตนาให้ชัด ไม่ใช่ปล่อยให้
+// catch-all จับเงียบๆ (ถ้าวันหนึ่งมีคนเผลอเพิ่มการอ่านฝั่ง client เข้ามา
+// จะเห็นว่าต้องมาแก้ที่นี่อย่างจงใจก่อน)
+//
+// ทดสอบกฎ: firebase emulators:start --only firestore  (ต้องมี Java)
+// deploy:  firebase deploy --only firestore:rules
 
 service cloud.firestore {
   match /databases/{database}/documents {
 
     // ---------- helper ----------
     //
-    // หมายเหตุ: ตอน compile จะเห็น warning "Invalid variable name: request"
-    // ที่บรรทัดใน helper เหล่านี้ เป็น warning ของ linter ไม่ใช่ error — rules
-    // compile ผ่านและ `request` เข้าถึงได้จริงตอน runtime ตามที่ Firebase ออกแบบไว้
-    // ส่วน warning "Unused function" จะหายไปเองเมื่อเริ่มเขียนกฎ collection จริง
+    // ยังไม่มี match block ไหนใช้ helper เหล่านี้ เพราะทุกอย่างปิดหมด
+    // เก็บไว้เป็นรูปแบบพร้อมใช้ตอนที่มี collection ที่ client ต้องอ่านจริง
+    // (เช่นถ้าวันหนึ่งย้ายรายการสินค้าเข้ามาเป็น catalog สาธารณะ)
+    //
+    // หมายเหตุ: warning "Invalid variable name: request" / "Unused function"
+    // ตอน compile เป็น warning ของ linter ไม่ใช่ error — `request` ใช้ได้จริงตอน runtime
 
     function isSignedIn() {
       return request.auth != null;
     }
 
-    // role มาจาก custom claims ของ Firebase Auth เท่านั้น
-    // ห้ามอ่าน role จาก document ที่ client เขียนเองได้ เพราะจะยกระดับสิทธิ์ตัวเองได้
+    // role ต้องมาจาก custom claims เท่านั้น ให้ตรงกับที่ src/lib/session.ts อ่าน
+    // ห้ามอ่าน role จาก document เพราะถ้าเผลอเปิดสิทธิ์เขียน ผู้ใช้ยกระดับตัวเองได้
     function isAdmin() {
       return isSignedIn() && request.auth.token.role == 'ADMIN';
     }
 
-    function isOwner(uid) {
-      return isSignedIn() && request.auth.uid == uid;
+    // ---------- คำสั่งซื้อและสิทธิ์ดาวน์โหลด ----------
+    //
+    // src/lib/checkout-orders.ts : checkoutOrders/{reference}
+    //                              checkoutOrders/{reference}/downloads/{token}
+    //
+    // ปิดฝั่ง client ทั้งอ่านและเขียน แม้เป็นเจ้าของออเดอร์เองก็ตาม เพราะ:
+    //   - สิทธิ์ดาวน์โหลดขึ้นอยู่กับโควตา (downloadCount/downloadLimit) และ
+    //     วันหมดอายุ ซึ่งต้องหักแบบ atomic ใน transaction — rules ทำแทนไม่ได้
+    //   - เอกสารเก็บ accessToken ของออเดอร์ ถ้าอ่านได้จะเท่ากับแจกสิทธิ์ดาวน์โหลด
+    //   - สถานะ PAID ต้องมาจาก webhook ที่ verify ลายเซ็น Stripe แล้วเท่านั้น
+    //     (src/app/api/webhooks/route.ts) ห้าม client เขียนเองเด็ดขาด
+    //
+    // ลูกค้าดูสถานะผ่าน GET /api/checkout/status และโหลดไฟล์ผ่าน GET /api/downloads
+    // ซึ่งตรวจสิทธิ์ฝั่ง server ก่อนทุกครั้ง
+    match /checkoutOrders/{reference} {
+      allow read, write: if false;
+
+      match /downloads/{token} {
+        allow read, write: if false;
+      }
     }
 
-    // ---------- collection rules ----------
+    // ---------- บันทึก webhook ของ Stripe ----------
     //
-    // ยังไม่มี collection ใดถูกเปิด — เพิ่มที่นี่ทีละอันเมื่อ planner กำหนด schema แล้ว
-    //
-    // ตัวอย่างรูปแบบที่คาดว่าจะใช้ (ยังไม่เปิดใช้ อย่าลอกไปวางโดยไม่ตรวจ):
-    //
-    // match /products/{productId} {
-    //   // สินค้าที่เผยแพร่แล้วอ่านได้ทุกคน แต่เขียนได้เฉพาะ admin
-    //   allow read: if resource.data.published == true || isAdmin();
-    //   allow write: if isAdmin();
-    // }
-    //
-    // match /orders/{orderId} {
-    //   // คำสั่งซื้ออ่านได้เฉพาะเจ้าของกับ admin
-    //   allow read: if isOwner(resource.data.userId) || isAdmin();
-    //   // ห้าม client สร้าง order เอง — ต้องผ่าน server (route handler ที่ verify ID token)
-    //   // เพราะราคาและสิทธิ์ license ต้องคำนวณฝั่ง server ไม่เชื่อค่าจาก client
-    //   allow create, update, delete: if false;
-    // }
-    //
-    // match /downloads/{downloadId} {
-    //   // download token ต้องออกและนับโควตาฝั่ง server เท่านั้น
-    //   allow read: if isOwner(resource.data.userId) || isAdmin();
-    //   allow write: if false;
-    // }
+    // src/lib/checkout-orders.ts : stripeWebhookEvents/{eventId}
+    // ใช้กันการประมวลผล event ซ้ำ (idempotency) ไม่ใช่ข้อมูลที่ client ต้องเห็น
+    match /stripeWebhookEvents/{eventId} {
+      allow read, write: if false;
+    }
 
     // ---------- Fail-Closed default ----------
+    //
     // ทุก path ที่ไม่มีกฎข้างบนครอบ = เข้าถึงไม่ได้
+    // เตือนไว้: เงื่อนไขจากหลาย match block ถูก OR กัน ดังนั้นบล็อกนี้
+    // "ไม่ได้" ล็อกทับ match อื่น — ถ้า match ไหน allow ไว้ อันนั้นจะผ่าน
     match /{document=**} {
       allow read, write: if false;
     }

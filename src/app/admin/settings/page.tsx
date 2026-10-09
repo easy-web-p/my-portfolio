@@ -137,8 +137,8 @@ export default function AdminSettingsPage() {
 
             <div className="p-3 rounded-2xl bg-surface-container-low/70 border border-outline-variant/20 flex items-center justify-between">
               <div>
-                <div className="font-bold text-on-surface">Prisma SQLite ORM Storage</div>
-                <div className="text-[10px] text-on-surface-variant">Database: file:./dev.db (Healthy)</div>
+                <div className="font-bold text-on-surface">Cloud Firestore</div>
+                <div className="text-[10px] text-on-surface-variant font-mono">checkoutOrders · stripeWebhookEvents</div>
               </div>
               <span className="text-success text-[10px] font-bold px-2 py-0.5 rounded bg-success/10 border border-success/30">
                 CONNECTED

@@ -140,8 +140,8 @@ export const AdminTopbar: React.FC<TopbarProps> = ({
                   <div className="text-[10px] text-on-surface-variant font-mono">Token dl_ys2pxh8 verified (1/5 used)</div>
                 </div>
                 <div className="p-2 rounded-xl bg-surface-container-low/60 hover:bg-surface-container-low transition-colors">
-                  <div className="font-bold text-on-surface">Prisma SQLite Synced</div>
-                  <div className="text-[10px] text-on-surface-variant font-mono">All database models healthy</div>
+                  <div className="font-bold text-on-surface">Cloud Firestore</div>
+                  <div className="text-[10px] text-on-surface-variant font-mono">Orders and downloads server-side only</div>
                 </div>
               </div>
             </div>
