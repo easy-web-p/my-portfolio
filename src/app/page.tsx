@@ -243,14 +243,14 @@ export default function HomePage() {
             {/* CTA Cluster */}
             <div className="flex flex-wrap items-center gap-space-md pt-space-xs w-full sm:w-auto">
               <a
-                className="inline-flex items-center justify-center gap-space-xs px-space-lg py-space-sm rounded-lg bg-primary text-on-primary font-label-md text-label-md shadow-[4px_4px_0px_#141b2b] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[6px_6px_0px_#141b2b] transition-all duration-200 cursor-pointer select-none"
+                className="inline-flex items-center justify-center gap-space-xs px-space-lg py-space-sm rounded-lg bg-primary text-on-primary font-label-md text-label-md shadow-hard-4 hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-hard-6 transition-all duration-200 cursor-pointer select-none"
                 href="#work"
               >
                 <span>{t('hero.cta.works')}</span>
                 <span className="material-symbols-outlined text-[18px]">south</span>
               </a>
               <a
-                className="inline-flex items-center justify-center gap-space-xs px-space-lg py-space-sm rounded-lg bg-tertiary-fixed text-on-tertiary-fixed font-label-md text-label-md shadow-[3px_3px_0px_#141b2b] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[5px_5px_0px_#141b2b] transition-all duration-200 cursor-pointer select-none font-bold"
+                className="inline-flex items-center justify-center gap-space-xs px-space-lg py-space-sm rounded-lg bg-tertiary-fixed text-on-tertiary-fixed font-label-md text-label-md shadow-hard-3 hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-hard-5 transition-all duration-200 cursor-pointer select-none font-bold"
                 href="/documents/portfolio-phisit.pdf"
                 target="_blank"
                 rel="noreferrer"
@@ -259,7 +259,7 @@ export default function HomePage() {
                 <span>{t('hero.cta.pdf')}</span>
               </a>
               <a
-                className="inline-flex items-center justify-center gap-space-xs px-space-lg py-space-sm rounded-lg bg-surface-container-lowest text-on-surface font-label-md text-label-md shadow-[3px_3px_0px_#141b2b] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[5px_5px_0px_#141b2b] transition-all duration-200 cursor-pointer select-none"
+                className="inline-flex items-center justify-center gap-space-xs px-space-lg py-space-sm rounded-lg bg-surface-container-lowest text-on-surface font-label-md text-label-md shadow-hard-3 hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-hard-5 transition-all duration-200 cursor-pointer select-none"
                 href="#contact"
               >
                 <span>{t('hero.cta.contact')}</span>
@@ -290,7 +290,7 @@ export default function HomePage() {
           <div className="lg:col-span-5 relative w-full flex justify-center lg:justify-end">
             {/* Interactive Canvas Card Container */}
             <div
-              className="w-full max-w-md bg-surface-container-lowest rounded-2xl p-space-lg shadow-[8px_8px_0px_#141b2b] relative overflow-hidden transition-all duration-300 border border-outline-variant/20"
+              className="w-full max-w-md bg-surface-container-lowest rounded-2xl p-space-lg shadow-hard-8 relative overflow-hidden transition-all duration-300 border border-outline-variant/20"
               id="playground-card"
             >
               {/* Card Header Bar */}
@@ -371,23 +371,23 @@ export default function HomePage() {
                 </svg>
 
                 {/* Floating Sticker Labels */}
-                <div className="absolute top-2 left-3 transform -rotate-6 bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-[10px] px-2 py-0.5 rounded-full shadow-[2px_2px_0px_#141b2b] select-none pointer-events-none font-bold">
+                <div className="absolute top-2 left-3 transform -rotate-6 bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-[10px] px-2 py-0.5 rounded-full shadow-hard-2 select-none pointer-events-none font-bold">
                   ✦ DESIGN
                 </div>
-                <div className="absolute bottom-2 left-4 transform rotate-3 bg-secondary-fixed text-on-secondary-fixed font-label-sm text-[10px] px-2 py-0.5 rounded-full shadow-[2px_2px_0px_#141b2b] select-none pointer-events-none font-bold">
+                <div className="absolute bottom-2 left-4 transform rotate-3 bg-secondary-fixed text-on-secondary-fixed font-label-sm text-[10px] px-2 py-0.5 rounded-full shadow-hard-2 select-none pointer-events-none font-bold">
                   ⚡ CODE
                 </div>
-                <div className="absolute top-3 right-4 transform rotate-6 bg-primary-fixed-dim text-on-primary-fixed font-label-sm text-[10px] px-2 py-0.5 rounded-full shadow-[2px_2px_0px_#141b2b] select-none pointer-events-none font-bold">
+                <div className="absolute top-3 right-4 transform rotate-6 bg-primary-fixed-dim text-on-primary-fixed font-label-sm text-[10px] px-2 py-0.5 rounded-full shadow-hard-2 select-none pointer-events-none font-bold">
                   🔮 AI
                 </div>
-                <div className="absolute bottom-3 right-5 transform -rotate-3 bg-tertiary-container text-on-tertiary-container font-label-sm text-[10px] px-2 py-0.5 rounded-full shadow-[2px_2px_0px_#141b2b] select-none pointer-events-none font-bold">
+                <div className="absolute bottom-3 right-5 transform -rotate-3 bg-tertiary-container text-on-tertiary-container font-label-sm text-[10px] px-2 py-0.5 rounded-full shadow-hard-2 select-none pointer-events-none font-bold">
                   🎈 CURIOSITY
                 </div>
               </div>
 
               {/* Profile Snapshot Card Detail */}
               <div className="flex items-center gap-space-md p-space-sm rounded-xl bg-surface-container-low mb-space-md">
-                <div className="relative w-14 h-14 rounded-xl overflow-hidden shadow-[2px_2px_0px_#141b2b] shrink-0 border border-outline-variant/30">
+                <div className="relative w-14 h-14 rounded-xl overflow-hidden shadow-hard-2 shrink-0 border border-outline-variant/30">
                   <Image
                     src="/images/profile/phisit-square.png"
                     alt="พิสิษฐ์ แก้วกุลพิสิฐ"
@@ -510,7 +510,7 @@ export default function HomePage() {
           </div>
 
           {/* PROJECT 1: แอปพลิเคชัน เกษตรอินเสิร์ท (Kaset Insert) */}
-          <article className="grid grid-cols-1 lg:grid-cols-12 gap-space-xl p-space-lg lg:p-space-2xl rounded-2xl bg-surface-container-lowest shadow-[8px_8px_0px_#141b2b] items-center border border-outline-variant/20">
+          <article className="grid grid-cols-1 lg:grid-cols-12 gap-space-xl p-space-lg lg:p-space-2xl rounded-2xl bg-surface-container-lowest shadow-hard-8 items-center border border-outline-variant/20">
             {/* Content Column */}
             <div className="lg:col-span-6 flex flex-col items-start gap-space-md order-2 lg:order-1">
               <div className="flex items-center gap-space-xs flex-wrap">
@@ -553,7 +553,7 @@ export default function HomePage() {
               </div>
 
               <a
-                className="group inline-flex items-center gap-space-xs px-space-md py-space-sm rounded-lg bg-primary text-on-primary font-label-md text-label-md shadow-[3px_3px_0px_#141b2b] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[5px_5px_0px_#141b2b] transition-all duration-200 cursor-pointer select-none"
+                className="group inline-flex items-center gap-space-xs px-space-md py-space-sm rounded-lg bg-primary text-on-primary font-label-md text-label-md shadow-hard-3 hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-hard-5 transition-all duration-200 cursor-pointer select-none"
                 href="/work/kaset-insert"
               >
                 <span>{language === 'th' ? 'อ่านกรณีศึกษาเต็ม (Case Study) →' : 'Read Full Case Study →'}</span>
@@ -576,7 +576,7 @@ export default function HomePage() {
           </article>
 
           {/* PROJECT 2: Lomsak Barber Map */}
-          <article className="grid grid-cols-1 lg:grid-cols-12 gap-space-xl p-space-lg lg:p-space-2xl rounded-2xl bg-surface-container-lowest shadow-[8px_8px_0px_#141b2b] items-center border border-outline-variant/20">
+          <article className="grid grid-cols-1 lg:grid-cols-12 gap-space-xl p-space-lg lg:p-space-2xl rounded-2xl bg-surface-container-lowest shadow-hard-8 items-center border border-outline-variant/20">
             {/* Mockup Visual Column (Left for variation) */}
             <div className="lg:col-span-6 order-1">
               <div className="w-full rounded-xl bg-surface-container-high p-space-sm shadow-inner relative overflow-hidden flex justify-center items-center">
@@ -633,7 +633,7 @@ export default function HomePage() {
               </div>
 
               <a
-                className="inline-flex items-center gap-space-xs px-space-md py-space-sm rounded-lg bg-surface-container-highest text-on-surface font-label-md text-label-md shadow-[3px_3px_0px_#141b2b] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[5px_5px_0px_#141b2b] transition-all duration-200 cursor-pointer select-none"
+                className="inline-flex items-center gap-space-xs px-space-md py-space-sm rounded-lg bg-surface-container-highest text-on-surface font-label-md text-label-md shadow-hard-3 hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-hard-5 transition-all duration-200 cursor-pointer select-none"
                 href="/work/lomsak-barber-map"
               >
                 <span>{language === 'th' ? 'ดูรายละเอียดผลงาน →' : 'View Project Details →'}</span>
@@ -642,7 +642,7 @@ export default function HomePage() {
           </article>
 
           {/* PROJECT 3: AI ให้คำปรึกษาด้านสุขภาพจิตเบื้องต้น */}
-          <article className="grid grid-cols-1 lg:grid-cols-12 gap-space-xl p-space-lg lg:p-space-2xl rounded-2xl bg-surface-container-lowest shadow-[8px_8px_0px_#141b2b] items-center border border-outline-variant/20">
+          <article className="grid grid-cols-1 lg:grid-cols-12 gap-space-xl p-space-lg lg:p-space-2xl rounded-2xl bg-surface-container-lowest shadow-hard-8 items-center border border-outline-variant/20">
             {/* Content Column */}
             <div className="lg:col-span-6 flex flex-col items-start gap-space-md order-2 lg:order-1">
               <div className="flex items-center gap-space-xs flex-wrap">
@@ -685,7 +685,7 @@ export default function HomePage() {
               </div>
 
               <a
-                className="inline-flex items-center gap-space-xs px-space-md py-space-sm rounded-lg bg-primary text-on-primary font-label-md text-label-md shadow-[3px_3px_0px_#141b2b] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[5px_5px_0px_#141b2b] transition-all duration-200 cursor-pointer select-none"
+                className="inline-flex items-center gap-space-xs px-space-md py-space-sm rounded-lg bg-primary text-on-primary font-label-md text-label-md shadow-hard-3 hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-hard-5 transition-all duration-200 cursor-pointer select-none"
                 href="/work/ai-mental-health-consultant"
               >
                 <span>{language === 'th' ? 'ดูรายละเอียดโครงการ ↗' : 'View Project Details ↗'}</span>
@@ -731,11 +731,11 @@ export default function HomePage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-space-lg">
             {/* Bento 1: AI & Machine Learning */}
             <div
-              className={`lg:col-span-7 rounded-2xl p-space-lg shadow-[6px_6px_0px_#141b2b] flex flex-col justify-between transition-colors duration-300 border border-outline-variant/20 ${
+              className={`lg:col-span-7 rounded-2xl p-space-lg shadow-hard-6 flex flex-col justify-between transition-colors duration-300 border border-outline-variant/20 ${
                 bentoTheme === 'classic'
                   ? 'bg-surface-container-lowest text-on-surface'
                   : bentoTheme === 'lime'
-                  ? 'bg-tertiary-fixed text-[#131f00]'
+                  ? 'bg-tertiary-fixed text-on-tertiary-fixed'
                   : 'bg-inverse-surface text-inverse-on-surface'
               }`}
               id="bento-design-card"
@@ -806,7 +806,7 @@ export default function HomePage() {
             </div>
 
             {/* Bento 2: Development */}
-            <div className="lg:col-span-5 bg-surface-container-lowest rounded-2xl p-space-lg shadow-[6px_6px_0px_#141b2b] flex flex-col justify-between border border-outline-variant/20">
+            <div className="lg:col-span-5 bg-surface-container-lowest rounded-2xl p-space-lg shadow-hard-6 flex flex-col justify-between border border-outline-variant/20">
               <div className="flex flex-col gap-space-xs">
                 <span className="w-10 h-10 rounded-xl bg-secondary-fixed flex items-center justify-center text-on-secondary-fixed shadow-2xs">
                   <span className="material-symbols-outlined text-[24px]">terminal</span>
@@ -845,7 +845,7 @@ export default function HomePage() {
             </div>
 
             {/* Bento 3: Hardware Maintenance */}
-            <div className="lg:col-span-5 bg-surface-container-lowest rounded-2xl p-space-lg shadow-[6px_6px_0px_#141b2b] flex flex-col justify-between border border-outline-variant/20">
+            <div className="lg:col-span-5 bg-surface-container-lowest rounded-2xl p-space-lg shadow-hard-6 flex flex-col justify-between border border-outline-variant/20">
               <div className="flex flex-col gap-space-xs">
                 <span className="w-10 h-10 rounded-xl bg-primary-container flex items-center justify-center text-on-primary-container shadow-2xs">
                   <span className="material-symbols-outlined text-[24px]">build</span>
@@ -892,7 +892,7 @@ export default function HomePage() {
             </div>
 
             {/* Bento 4: Leadership & Youth Advocacy */}
-            <div className="lg:col-span-7 bg-surface-container-lowest rounded-2xl p-space-lg shadow-[6px_6px_0px_#141b2b] flex flex-col justify-between border border-outline-variant/20">
+            <div className="lg:col-span-7 bg-surface-container-lowest rounded-2xl p-space-lg shadow-hard-6 flex flex-col justify-between border border-outline-variant/20">
               <div className="flex flex-col gap-space-xs">
                 <div className="flex items-center justify-between">
                   <span className="w-10 h-10 rounded-xl bg-tertiary-fixed flex items-center justify-center text-on-tertiary-fixed shadow-2xs">
@@ -958,7 +958,7 @@ export default function HomePage() {
           {/* 3 Collectible Lab Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-space-lg">
             {/* Lab Card 1: Microsoft Generative AI */}
-            <div className="bg-surface-container-lowest rounded-2xl p-space-lg shadow-[6px_6px_0px_#141b2b] flex flex-col justify-between hover:translate-y-[-2px] transition-transform border border-outline-variant/20">
+            <div className="bg-surface-container-lowest rounded-2xl p-space-lg shadow-hard-6 flex flex-col justify-between hover:translate-y-[-2px] transition-transform border border-outline-variant/20">
               <div className="flex flex-col gap-space-md">
                 <div className="flex items-center justify-between">
                   <span className="px-space-xs py-space-xxs rounded-md bg-primary-fixed text-on-primary-fixed font-label-sm text-[11px] font-bold tracking-wide">
@@ -1019,7 +1019,7 @@ export default function HomePage() {
             </div>
 
             {/* Lab Card 2: Python for GenAI */}
-            <div className="bg-surface-container-lowest rounded-2xl p-space-lg shadow-[6px_6px_0px_#141b2b] flex flex-col justify-between hover:translate-y-[-2px] transition-transform border border-outline-variant/20">
+            <div className="bg-surface-container-lowest rounded-2xl p-space-lg shadow-hard-6 flex flex-col justify-between hover:translate-y-[-2px] transition-transform border border-outline-variant/20">
               <div className="flex flex-col gap-space-md">
                 <div className="flex items-center justify-between">
                   <span className="px-space-xs py-space-xxs rounded-md bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-[11px] font-bold tracking-wide">
@@ -1082,7 +1082,7 @@ export default function HomePage() {
             </div>
 
             {/* Lab Card 3: Chula MOOC */}
-            <div className="bg-surface-container-lowest rounded-2xl p-space-lg shadow-[6px_6px_0px_#141b2b] flex flex-col justify-between hover:translate-y-[-2px] transition-transform border border-outline-variant/20">
+            <div className="bg-surface-container-lowest rounded-2xl p-space-lg shadow-hard-6 flex flex-col justify-between hover:translate-y-[-2px] transition-transform border border-outline-variant/20">
               <div className="flex flex-col gap-space-md">
                 <div className="flex items-center justify-between">
                   <span className="px-space-xs py-space-xxs rounded-md bg-secondary-fixed text-on-secondary-fixed font-label-sm text-[11px] font-bold tracking-wide">
@@ -1162,7 +1162,7 @@ export default function HomePage() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-space-xl">
             {/* Story Column */}
             <div className="lg:col-span-7 flex flex-col gap-space-lg">
-              <div className="p-space-lg lg:p-space-xl rounded-2xl bg-surface-container-lowest shadow-[6px_6px_0px_#141b2b] border border-outline-variant/20">
+              <div className="p-space-lg lg:p-space-xl rounded-2xl bg-surface-container-lowest shadow-hard-6 border border-outline-variant/20">
                 <p className="font-headline-sm text-headline-sm text-on-surface leading-snug mb-space-md font-semibold">
                   {language === 'th'
                     ? '“มุ่งมั่นพัฒนาตนเอง สู่การสร้างสรรค์นวัตกรรม AI และเทคโนโลยีเพื่อขับเคลื่อนสังคม”'
@@ -1181,7 +1181,7 @@ export default function HomePage() {
               </div>
 
               {/* Visual Timeline */}
-              <div className="p-space-lg rounded-2xl bg-surface-container-lowest shadow-[6px_6px_0px_#141b2b] flex flex-col gap-space-md border border-outline-variant/20">
+              <div className="p-space-lg rounded-2xl bg-surface-container-lowest shadow-hard-6 flex flex-col gap-space-md border border-outline-variant/20">
                 <span className="font-label-sm text-label-sm text-primary uppercase tracking-wider font-bold">
                   {language === 'th'
                     ? 'เส้นทางการเติบโตและพัฒนาการ (Trajectory & Evolution)'
@@ -1242,7 +1242,7 @@ export default function HomePage() {
 
             {/* Personality Matrix & Fast Facts */}
             <div className="lg:col-span-5 flex flex-col gap-space-md">
-              <div className="p-space-lg rounded-2xl bg-surface-container-lowest shadow-[6px_6px_0px_#141b2b] flex flex-col gap-space-md h-full border border-outline-variant/20">
+              <div className="p-space-lg rounded-2xl bg-surface-container-lowest shadow-hard-6 flex flex-col gap-space-md h-full border border-outline-variant/20">
                 <span className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider font-bold">
                   {language === 'th' ? 'บุคลิกภาพและความสามารถ (Work Ability)' : 'Personality & Core Work Strengths'}
                 </span>
@@ -1343,7 +1343,7 @@ export default function HomePage() {
           {/* Constellation Clusters */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-space-lg">
             {/* Cluster 1: AI & Intelligent Systems */}
-            <div className="bg-surface-container-lowest p-space-lg rounded-2xl shadow-[6px_6px_0px_#141b2b] flex flex-col gap-space-md border border-outline-variant/20">
+            <div className="bg-surface-container-lowest p-space-lg rounded-2xl shadow-hard-6 flex flex-col gap-space-md border border-outline-variant/20">
               <div className="flex items-center gap-space-xs">
                 <span className="material-symbols-outlined text-primary text-[24px]">psychology</span>
                 <h3 className="font-headline-sm text-headline-sm text-on-surface font-bold">
@@ -1365,7 +1365,7 @@ export default function HomePage() {
             </div>
 
             {/* Cluster 2: Web & Software Development */}
-            <div className="bg-surface-container-lowest p-space-lg rounded-2xl shadow-[6px_6px_0px_#141b2b] flex flex-col gap-space-md border border-outline-variant/20">
+            <div className="bg-surface-container-lowest p-space-lg rounded-2xl shadow-hard-6 flex flex-col gap-space-md border border-outline-variant/20">
               <div className="flex items-center gap-space-xs">
                 <span className="material-symbols-outlined text-primary text-[24px]">code</span>
                 <h3 className="font-headline-sm text-headline-sm text-on-surface font-bold">
@@ -1387,7 +1387,7 @@ export default function HomePage() {
             </div>
 
             {/* Cluster 3: Systems, Databases & GIS */}
-            <div className="bg-surface-container-lowest p-space-lg rounded-2xl shadow-[6px_6px_0px_#141b2b] flex flex-col gap-space-md border border-outline-variant/20">
+            <div className="bg-surface-container-lowest p-space-lg rounded-2xl shadow-hard-6 flex flex-col gap-space-md border border-outline-variant/20">
               <div className="flex items-center gap-space-xs">
                 <span className="material-symbols-outlined text-tertiary text-[24px]">database</span>
                 <h3 className="font-headline-sm text-headline-sm text-on-surface font-bold">
@@ -1409,7 +1409,7 @@ export default function HomePage() {
             </div>
 
             {/* Cluster 4: Hardware & Maintenance */}
-            <div className="bg-surface-container-lowest p-space-lg rounded-2xl shadow-[6px_6px_0px_#141b2b] flex flex-col gap-space-md border border-outline-variant/20">
+            <div className="bg-surface-container-lowest p-space-lg rounded-2xl shadow-hard-6 flex flex-col gap-space-md border border-outline-variant/20">
               <div className="flex items-center gap-space-xs">
                 <span className="material-symbols-outlined text-primary text-[24px]">build</span>
                 <h3 className="font-headline-sm text-headline-sm text-on-surface font-bold">
@@ -1431,7 +1431,7 @@ export default function HomePage() {
             </div>
 
             {/* Cluster 5: Leadership & Social Impact */}
-            <div className="bg-surface-container-lowest p-space-lg rounded-2xl shadow-[6px_6px_0px_#141b2b] flex flex-col gap-space-md lg:col-span-2 border border-outline-variant/20">
+            <div className="bg-surface-container-lowest p-space-lg rounded-2xl shadow-hard-6 flex flex-col gap-space-md lg:col-span-2 border border-outline-variant/20">
               <div className="flex items-center gap-space-xs">
                 <span className="material-symbols-outlined text-primary text-[24px]">groups</span>
                 <h3 className="font-headline-sm text-headline-sm text-on-surface font-bold">
@@ -1492,7 +1492,7 @@ export default function HomePage() {
             </div>
 
             {/* Command Palette Shortcut Hint */}
-            <div className="inline-flex items-center gap-space-xs px-space-sm py-space-xs rounded-xl bg-surface-container-lowest text-on-surface shadow-[2px_2px_0px_#141b2b]">
+            <div className="inline-flex items-center gap-space-xs px-space-sm py-space-xs rounded-xl bg-surface-container-lowest text-on-surface shadow-hard-2">
               <span className="material-symbols-outlined text-[18px] text-primary">keyboard_command_key</span>
               <span className="font-label-sm text-label-sm font-semibold">
                 {language === 'th' ? (
@@ -1509,7 +1509,7 @@ export default function HomePage() {
           </div>
 
           {/* Interactive Generator Widget Container */}
-          <div className="w-full bg-surface-container-lowest rounded-2xl p-space-lg lg:p-space-2xl shadow-[8px_8px_0px_#141b2b] flex flex-col gap-space-xl border border-outline-variant/20">
+          <div className="w-full bg-surface-container-lowest rounded-2xl p-space-lg lg:p-space-2xl shadow-hard-8 flex flex-col gap-space-xl border border-outline-variant/20">
             {/* Three Slot Dials */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-space-md">
               {/* Dial 1 */}
@@ -1575,7 +1575,7 @@ export default function HomePage() {
               <button
                 type="button"
                 onClick={generateIdea}
-                className="inline-flex items-center gap-space-xs px-space-xl py-space-sm rounded-xl bg-primary text-on-primary font-headline-sm text-body-md shadow-[4px_4px_0px_#141b2b] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[6px_6px_0px_#141b2b] active:translate-x-[0px] active:translate-y-[0px] active:shadow-[2px_2px_0px_#141b2b] transition-all duration-200 cursor-pointer select-none font-bold"
+                className="inline-flex items-center gap-space-xs px-space-xl py-space-sm rounded-xl bg-primary text-on-primary font-headline-sm text-body-md shadow-hard-4 hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-hard-6 active:translate-x-[0px] active:translate-y-[0px] active:shadow-hard-2 transition-all duration-200 cursor-pointer select-none font-bold"
                 id="generate-idea-btn"
               >
                 <span>
@@ -1718,7 +1718,7 @@ export default function HomePage() {
 
               {/* PDF Portfolio Download */}
               <a
-                className="inline-flex items-center justify-center gap-space-xs w-full py-space-xs rounded-lg bg-primary text-on-primary font-label-sm text-label-sm shadow-[2px_2px_0px_#141b2b] hover:opacity-90 transition-colors font-bold"
+                className="inline-flex items-center justify-center gap-space-xs w-full py-space-xs rounded-lg bg-primary text-on-primary font-label-sm text-label-sm shadow-hard-2 hover:opacity-90 transition-colors font-bold"
                 href="/documents/portfolio-phisit.pdf"
                 target="_blank"
                 rel="noreferrer"
@@ -1735,7 +1735,7 @@ export default function HomePage() {
 
           {/* Right Column: Interactive Contact Form */}
           <div className="lg:col-span-7">
-            <div className="p-space-lg lg:p-space-xl rounded-2xl bg-surface-container-lowest shadow-[8px_8px_0px_#141b2b] border border-outline-variant/20">
+            <div className="p-space-lg lg:p-space-xl rounded-2xl bg-surface-container-lowest shadow-hard-8 border border-outline-variant/20">
               <form className="flex flex-col gap-space-md" id="contact-form" onSubmit={handleFormSubmit}>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-space-md">
                   {/* Name Input */}
@@ -1862,7 +1862,7 @@ export default function HomePage() {
                 <div className="pt-space-xs">
                   {!formSubmitted ? (
                     <button
-                      className="w-full inline-flex items-center justify-center gap-space-xs py-space-sm px-space-lg rounded-lg bg-primary text-on-primary font-headline-sm text-body-md shadow-[4px_4px_0px_#141b2b] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[6px_6px_0px_#141b2b] active:translate-x-0 active:translate-y-0 transition-all duration-200 cursor-pointer font-bold disabled:opacity-75"
+                      className="w-full inline-flex items-center justify-center gap-space-xs py-space-sm px-space-lg rounded-lg bg-primary text-on-primary font-headline-sm text-body-md shadow-hard-4 hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-hard-6 active:translate-x-0 active:translate-y-0 transition-all duration-200 cursor-pointer font-bold disabled:opacity-75"
                       id="submit-btn"
                       type="submit"
                       disabled={isSubmitting}

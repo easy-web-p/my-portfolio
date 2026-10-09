@@ -181,7 +181,7 @@ export const Header: React.FC = () => {
 
             {/* Let's build something CTA Button */}
             <Link
-              className="hidden sm:inline-flex items-center justify-center px-3.5 py-1.5 rounded-xl bg-primary text-on-primary text-xs font-bold whitespace-nowrap shadow-[3px_3px_0px_#141b2b] hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-[4px_4px_0px_#141b2b] active:translate-x-0 active:translate-y-0 active:shadow-[1px_1px_0px_#141b2b] transition-all duration-150 cursor-pointer select-none shrink-0"
+              className="hidden sm:inline-flex items-center justify-center px-3.5 py-1.5 rounded-xl bg-primary text-on-primary text-xs font-bold whitespace-nowrap shadow-hard-3 hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-hard-4 active:translate-x-0 active:translate-y-0 active:shadow-hard-1 transition-all duration-150 cursor-pointer select-none shrink-0"
               data-path="contact"
               href="/contact"
             >

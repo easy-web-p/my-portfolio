@@ -212,7 +212,7 @@ export default function AdminDashboardPage() {
           </div>
 
           <div className="flex items-center justify-between text-xs font-mono text-on-surface-variant pt-1">
-            <span>Average Order: $84</span>
+            <span>Average Order: ฿84</span>
             <span className="text-primary font-bold">Top Performing: AI Chat Starter Kit</span>
           </div>
         </div>

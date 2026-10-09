@@ -175,7 +175,7 @@ export default function NewProjectPage() {
           <div className="pt-4 flex justify-end">
             <button
               type="submit"
-              className="px-6 py-2.5 rounded-xl bg-primary text-white font-bold shadow-[3px_3px_0px_#141b2b] hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-[4px_4px_0px_#141b2b] transition-all cursor-pointer"
+              className="px-6 py-2.5 rounded-xl bg-primary text-white font-bold shadow-hard-3 hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-hard-4 transition-all cursor-pointer"
             >
               Publish Case Study
             </button>

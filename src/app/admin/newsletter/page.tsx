@@ -114,7 +114,7 @@ export default function AdminNewsletterPage() {
 
               <button
                 type="submit"
-                className="w-full py-2.5 rounded-xl bg-primary text-white font-bold shadow-[3px_3px_0px_#141b2b] hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-[4px_4px_0px_#141b2b] transition-all cursor-pointer flex items-center justify-center gap-2"
+                className="w-full py-2.5 rounded-xl bg-primary text-white font-bold shadow-hard-3 hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-hard-4 transition-all cursor-pointer flex items-center justify-center gap-2"
               >
                 <span className="material-symbols-outlined text-[18px]">send</span>
                 <span>Dispatch Broadcast</span>

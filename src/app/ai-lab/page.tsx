@@ -61,7 +61,7 @@ export default function AiLabPage() {
               </Link>
               <Link
                 href="/contact"
-                className="px-4 py-2.5 rounded-xl bg-primary text-white text-xs font-bold shadow-[3px_3px_0px_#141b2b] hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-[4px_4px_0px_#141b2b] transition-all flex items-center gap-2"
+                className="px-4 py-2.5 rounded-xl bg-primary text-white text-xs font-bold shadow-hard-3 hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-hard-4 transition-all flex items-center gap-2"
               >
                 <span className="material-symbols-outlined text-[18px]">science</span>
                 <span>Propose an Experiment</span>

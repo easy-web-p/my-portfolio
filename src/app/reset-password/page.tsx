@@ -89,7 +89,7 @@ export default function ResetPasswordPage() {
               <button
                 type="submit"
                 disabled={password !== confirmPassword || password.length < 8}
-                className="w-full py-2.5 rounded-xl bg-primary text-white text-xs font-bold shadow-[3px_3px_0px_#141b2b] hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-[4px_4px_0px_#141b2b] transition-all cursor-pointer disabled:opacity-50"
+                className="w-full py-2.5 rounded-xl bg-primary text-white text-xs font-bold shadow-hard-3 hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-hard-4 transition-all cursor-pointer disabled:opacity-50"
               >
                 Update Password
               </button>

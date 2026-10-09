@@ -133,7 +133,7 @@ export const AdminTopbar: React.FC<TopbarProps> = ({
               <div className="space-y-1.5 text-xs">
                 <div className="p-2 rounded-xl bg-surface-container-low/60 hover:bg-surface-container-low transition-colors">
                   <div className="font-bold text-on-surface">New Order #ORD-982103</div>
-                  <div className="text-[10px] text-on-surface-variant font-mono">Marcus Vance paid $99 for AI Chat</div>
+                  <div className="text-[10px] text-on-surface-variant font-mono">Marcus Vance paid ฿99 for AI Chat</div>
                 </div>
                 <div className="p-2 rounded-xl bg-surface-container-low/60 hover:bg-surface-container-low transition-colors">
                   <div className="font-bold text-on-surface">Download verified</div>

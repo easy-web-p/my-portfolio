@@ -32,7 +32,7 @@ export default function AdminAnalyticsPage() {
         {[
           { label: 'Settled Gross', val: `$${metrics.totalRevenue.toLocaleString()}`, change: '+24.5%', icon: 'payments' },
           { label: 'Conversion Funnel', val: metrics.conversionRate, change: 'Top 5% peer benchmark', icon: 'trending_up' },
-          { label: 'Avg Order Value', val: '$84.20', change: '+12% vs Q4', icon: 'shopping_bag' },
+          { label: 'Avg Order Value', val: '฿84.20', change: '+12% vs Q4', icon: 'shopping_bag' },
           { label: 'Monthly Readers', val: metrics.blogViewsCount, change: '6.8 min duration', icon: 'visibility' },
         ].map((m) => (
           <div key={m.label} className="p-4 sm:p-5 rounded-3xl bg-surface-container-lowest border border-outline-variant/30 shadow-xs">
@@ -64,9 +64,9 @@ export default function AdminAnalyticsPage() {
 
           <div className="space-y-3 pt-2">
             {[
-              { name: 'Commercial Developer License (1.8x)', pct: 52, val: '$9,578', color: 'bg-primary' },
-              { name: 'Personal / Educational License (1.0x)', pct: 30, val: '$5,526', color: 'bg-secondary' },
-              { name: 'Extended / Agency SaaS License (3.5x)', pct: 18, val: '$3,316', color: 'bg-tertiary' },
+              { name: 'Commercial Developer License (1.8x)', pct: 52, val: '฿9,578', color: 'bg-primary' },
+              { name: 'Personal / Educational License (1.0x)', pct: 30, val: '฿5,526', color: 'bg-secondary' },
+              { name: 'Extended / Agency SaaS License (3.5x)', pct: 18, val: '฿3,316', color: 'bg-tertiary' },
             ].map((tier) => (
               <div key={tier.name} className="space-y-1 text-xs">
                 <div className="flex items-center justify-between">
@@ -125,10 +125,10 @@ export default function AdminAnalyticsPage() {
           </h4>
           <div className="space-y-2 font-mono">
             {[
-              { source: 'GitHub Repos & Gists', share: '42%', val: '$7,736' },
-              { source: 'Twitter / X Dev Community', share: '28%', val: '$5,157' },
-              { source: 'Discord & Reddit', share: '18%', val: '$3,315' },
-              { source: 'Direct & Bookmarks', share: '12%', val: '$2,212' },
+              { source: 'GitHub Repos & Gists', share: '42%', val: '฿7,736' },
+              { source: 'Twitter / X Dev Community', share: '28%', val: '฿5,157' },
+              { source: 'Discord & Reddit', share: '18%', val: '฿3,315' },
+              { source: 'Direct & Bookmarks', share: '12%', val: '฿2,212' },
             ].map((ref) => (
               <div key={ref.source} className="flex justify-between py-1.5 border-b border-outline-variant/10">
                 <span className="text-on-surface">{ref.source}</span>
@@ -144,10 +144,10 @@ export default function AdminAnalyticsPage() {
           </h4>
           <div className="space-y-2 font-mono">
             {[
-              { cat: 'Website Templates', share: '38%', val: '$6,999' },
-              { cat: 'AI Projects & Starters', share: '32%', val: '$5,894' },
-              { cat: 'Node.js REST APIs', share: '18%', val: '$3,315' },
-              { cat: 'UI Components', share: '12%', val: '$2,212' },
+              { cat: 'Website Templates', share: '38%', val: '฿6,999' },
+              { cat: 'AI Projects & Starters', share: '32%', val: '฿5,894' },
+              { cat: 'Node.js REST APIs', share: '18%', val: '฿3,315' },
+              { cat: 'UI Components', share: '12%', val: '฿2,212' },
             ].map((c) => (
               <div key={c.cat} className="flex justify-between py-1.5 border-b border-outline-variant/10">
                 <span className="text-on-surface">{c.cat}</span>

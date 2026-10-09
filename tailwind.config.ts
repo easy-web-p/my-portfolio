@@ -59,6 +59,21 @@ const config: Config = {
         'on-secondary-fixed-variant': '#404758',
         'primary-fixed': '#e9ddff',
       },
+      // เงาแข็งแบบ neo-brutalist — ลายเซ็นดีไซน์ของ Playful Intelligence
+      //
+      // ก่อนหน้านี้เขียนเป็น shadow-[3px_3px_0px_#141b2b] กระจาย 81 จุดใน JSX
+      // ย้ายมาไว้ที่เดียวเพื่อให้แก้สีเงาได้จบในบรรทัดเดียว
+      // ค่า #141b2b คือ token `on-secondary-fixed` ในพาเลตเดียวกันนี้
+      // ตั้งชื่อตามขนาด px ตรงๆ เพื่อให้เทียบกับของเดิมได้ทันทีและไม่ต้องเดา
+      boxShadow: {
+        'hard-1': '1px 1px 0px #141b2b',
+        'hard-2': '2px 2px 0px #141b2b',
+        'hard-3': '3px 3px 0px #141b2b',
+        'hard-4': '4px 4px 0px #141b2b',
+        'hard-5': '5px 5px 0px #141b2b',
+        'hard-6': '6px 6px 0px #141b2b',
+        'hard-8': '8px 8px 0px #141b2b',
+      },
       borderRadius: {
         DEFAULT: '0.25rem',
         lg: '0.5rem',
